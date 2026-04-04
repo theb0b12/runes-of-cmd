@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+sf::Font font("ttf/Hack-Regular.ttf");
+
 int main(){
     sf::RenderWindow window(sf::VideoMode({720, 1280}), "Runes of CMD");
     sf::CircleShape shape(100.f);
@@ -12,8 +14,9 @@ int main(){
                 window.close();
         }
 
-        window.clear();
+        window.clear(); 
         window.draw(shape);
         window.display();
+
     }
 }

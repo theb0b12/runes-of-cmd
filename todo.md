@@ -4,4 +4,3 @@
         - [ ] Allow for compiler to interperate runes to actually make commands
     - [ ] Add rune objects with unique names/effects
         - [ ] Add rune layout for summons and give enemies base rune-sets  
-- [ ] solid works 

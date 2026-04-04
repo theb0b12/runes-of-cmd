@@ -1,10 +1,10 @@
-#ifndef WIND_HPP
-#define WIND_HPP
-#include "Rune.hpp"
+#ifndef TWIST_HPP
+#define TWIST_HPP
+#include "../Rune.hpp"
 
-class Wind :public Rune{
+class Twist :public Rune{
     public:
-        Wind(Creature* h); 
+        Twist(Creature* h); 
         int activate(std::vector<Rune*>) override; //override the pure virtual function from the base class
 };
 

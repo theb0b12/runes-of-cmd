@@ -1,6 +1,6 @@
 #ifndef VIOLENCE_HPP
 #define VIOLENCE_HPP
-#include "Rune.hpp"
+#include "../Rune.hpp"
 
 class Violence :public Rune{
     public:

@@ -1,6 +1,6 @@
 #ifndef CHOICE_HPP
 #define CHOICE_HPP
-#include "Rune.hpp"
+#include "../Rune.hpp"
 
 class Choice :public Rune{
     public:

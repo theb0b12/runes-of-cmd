@@ -1,6 +1,6 @@
 #ifndef SIGHTRUNE_HPP
 #define SIGHTRUNE_HPP
-#include "Rune.hpp"
+#include "../Rune.hpp"
 
 class Sight :public Rune{
     public:

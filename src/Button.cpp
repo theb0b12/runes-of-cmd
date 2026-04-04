@@ -4,7 +4,9 @@
 
 Button::Button(sf::RectangleShape* button)
     : button(button), mousePressed(false), pressedInside(false), toggle(false)
-{}
+{
+    _originalColor = button->getFillColor();
+}
 
 void Button::update(sf::Vector2f mousePos) {
     bool isOver = button->getGlobalBounds().contains(mousePos);
@@ -32,27 +34,31 @@ void Button::update(sf::Vector2f mousePos) {
     if (justReleased && pressedInside)
         pressedInside = false;
 
-    // visual feedback — flash takes priority over everything
+    // visual feedback — flash takes full priority, then hover, then original
     if (_flashing) {
         float t = _flashClock.getElapsedTime().asSeconds();
         if (t < 0.25f) {
-            // pulse white then fade back
             float pulse = 1.f - (t / 0.25f);
-            int r = (int)(255);
-            int g = (int)(255 * pulse + 170 * (1.f - pulse));
-            int b = (int)(255 * pulse);
-            button->setFillColor(sf::Color(r, g, b));
-            return; // skip normal color logic while flashing
+            button->setFillColor(sf::Color(
+                (int)(_originalColor.r + (255 - _originalColor.r) * pulse),
+                (int)(_originalColor.g + (255 - _originalColor.g) * pulse),
+                (int)(_originalColor.b + (255 - _originalColor.b) * pulse)
+            ));
         } else {
             _flashing = false;
+            button->setFillColor(_originalColor);
         }
+        return; // skip everything else while flashing
     }
 
-    // normal hover colors
     if (isOver)
-        button->setFillColor(sf::Color(0, 170, 255));
+        button->setFillColor(sf::Color(
+            (int)(_originalColor.r * 0.6f),
+            (int)(_originalColor.g * 0.6f + 170 * 0.4f),
+            (int)(_originalColor.b * 0.6f + 255 * 0.4f)
+        ));
     else
-        button->setFillColor(sf::Color::White);
+        button->setFillColor(_originalColor);
 }
 
 bool Button::getToggle() const {

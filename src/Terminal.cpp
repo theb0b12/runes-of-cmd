@@ -79,11 +79,15 @@ void Terminal::setupTerminal(Creature& c) {
     _pickerBg.setOutlineColor({ 50, 50, 70 });
     _pickerBg.setOutlineThickness(1.f);
 
-    _pickerCardShapes.reserve(runeArr.size());
+    
     // picker cards
     _pickerCardShapes.clear();
     _pickerButtons.clear();
     _pickerLabels.clear();
+
+    _pickerCardShapes.reserve(runeArr.size());
+
+    
     float cardStartX = o.x + PAD * 2;
     float cardY      = pickerY + PAD * 2;
     for (int i = 0; i < (int)runeArr.size(); i++) {

@@ -1,10 +1,19 @@
 #include "Player.hpp"
 
+
 //constructor, there is no destructor or copy constructor as there is always only one player 
 Player::Player(){
     xPos = 0;
     yPos = 0;
     isFacing = 1;
+    body = sf::CircleShape(50);
+    
+}
+
+
+void Player::printPlayer(sf::RenderWindow& window){
+    body.setPosition({xPos,yPos});
+    window.draw(body);
 }
 
 //getters

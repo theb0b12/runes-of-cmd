@@ -23,3 +23,8 @@ bool LockButton::getLock() const{
 void LockButton::setLock(bool value){
     lock = value;
 }
+
+
+bool LockButton::canToggle() const {
+    return !lock;
+}

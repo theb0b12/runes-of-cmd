@@ -8,54 +8,7 @@
 const int windowX = 1280;
 const int windowY = 720;
 
-void processToggleButton(sf::RectangleShape *button, sf::Vector2f mousePos, bool *toggle, bool *lock)
-{
-    static bool mousePressed = false;
-    static bool pressedInside = false;
 
-    bool isOver = button->getGlobalBounds().contains(mousePos);
-
-    bool justPressed = false;
-    bool justReleased = false;
-
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
-        if (!mousePressed)
-            justPressed = true;
-
-        mousePressed = true;
-    }
-    else{
-        if (mousePressed)
-            justReleased = true;
-
-        mousePressed = false;
-    }
-
-    if (isOver && justPressed){
-        pressedInside = true;
-        // std::cout << "Press\n";
-    }
-
-    if (justReleased && pressedInside){
-        // std::cout << "Release\n";
-        pressedInside = false;
-    }
-
-    if (isOver && mousePressed && !*lock)
-        if(*toggle){
-            *toggle = false;
-        }
-        else{
-            *toggle = true;
-            *lock = true;
-        }
-    else if (isOver){
-        button->setFillColor(sf::Color(0, 170, 255));
-    }
-    else{
-        button->setFillColor(sf::Color::White);
-    }
-}
 
 int main(){
     sf::RenderWindow window(sf::VideoMode({windowX, windowY}), "Runes of CMD");

@@ -1,27 +1,32 @@
 #ifndef CREATURE_HPP
 #define CREATURE_HPP
 
+#include "Map.hpp"
 #include <vector>
 
 class Creature {
 public:
-    Creature(float, float, int, bool);
-    float getXpos();
-    float getYpos();
+    Creature(int, int, int, bool, int);
+    int getXpos();
+    int getYpos();
     int getFacing();
     int getHealth();
-    int inFront();
+    int inFront(Map& map);
+    bool getEnemy();
     void attack();
-    void moveBy(float, float);
+    void moveBy(int, int);
     void setFacing(int f) { isFacing = f; }
     void addRune(int);
+    void drawCreature(sf::RenderWindow&, Map&);
 private:
     std::vector <int> possibleRunes;
+    sf::CircleShape body;
     bool isEnemy;
     int isFacing;
-    float xPos;
-    float yPos;
+    int xPos;
+    int yPos;
     int health;
+    int id;
 };
 
 #endif

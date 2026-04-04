@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 
 #include "LockButton.hpp"
+#include "Creature.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
 #include <iostream>
@@ -38,6 +39,12 @@ int main(){
     text.setString("Hellow");
     text.setCharacterSize(24); // in pixels, not points
     text.setFillColor(sf::Color::Red);
+
+
+    //Creature Feature featuring the creature
+    Creature C1(3,4,-2,true,0);
+    
+
 
 
     // create the terminal thing
@@ -81,6 +88,7 @@ int main(){
         // displaying stuff
         window.clear();
         map.draw(window);
+        C1.drawCreature(window,map);
         player.printPlayer(window);
         if (guiButton.getToggle()) {
             window.draw(terminal);

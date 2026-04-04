@@ -8,6 +8,7 @@ Creature::Creature(int x, int y, int hp, bool enemy, int count){
     isFacing = -1;
     isEnemy = enemy;
     possibleRunes = std::vector<int>();
+    body = sf::CircleShape(50);
     id = count;
 }
 
@@ -46,6 +47,8 @@ void Creature::addRune(int r){
 
 void Creature::drawCreature(sf::RenderWindow& window, Map& map){
     //same position as map tiles
+    body.setRadius(map.getTileHeight()/2);
+    body.setFillColor(sf::Color::Red);
     body.setPosition({xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f, (yPos - 3) * map.getTileHeight() + map.getHeight()/2});
     map.occupied[xPos][yPos] = id;
     window.draw(body);

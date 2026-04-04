@@ -1,4 +1,10 @@
-TARGET = rune
+
+PROJECT = runes-of-cmd
+ifeq ($(shell echo "Windows"), "Windows")
+	TARGET = $(PROJECT).exe
+else
+	TARGET = $(PROJECT)
+endif
 SRC_DIR = src
 RUNE_DIR = rune-types
 OBJ_DIR = obj
@@ -30,7 +36,7 @@ all: $(TARGET)
 	g++ -o $(TARGET) $(OBJECTS) $(LIBS)
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $@ $(LIBS)
+	$(CXX) $(OBJECTS) -o $@ $^ $(LIBS)
 
 
 # --- Compile rule ---

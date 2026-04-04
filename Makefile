@@ -4,21 +4,21 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN_DIR = bin
 
-#ifeq ($(shell echo "Windows"), "Windows")
+ifeq ($(shell echo "Windows"), "Windows")
     RM      := del /f /q
     RMDIR   := rd /s /q
     MKDIR   := mkdir
     CP      := copy /y
     DIR_SEP := /  # Use forward slashes (Windows supports this)
     EXE_EXT := .exe
-# else
-#     RM      := rm -f
-#     RMDIR   := rm -rf
-#     MKDIR   := mkdir -p
-#     CP      := cp
-#     DIR_SEP := /
-#     EXE_EXT :=
-# endif
+ else
+     RM      := rm -f
+     RMDIR   := rm -rf
+     MKDIR   := mkdir -p
+     CP      := cp
+     DIR_SEP := /
+     EXE_EXT :=
+ endif
 
 # ALL CPP IMPLEMENTATION FILES THAT MAKE UP THE PROJECT
 SRC_FILES = $(wildcard src/*.cpp) $(wildcard $(SRC_DIR)$(DIR_SEP)$(RUNE_DIR)$(DIR_SEP)*.cpp)

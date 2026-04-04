@@ -64,9 +64,16 @@ int main(){
 
     Map map(windowX, windowY);
 
-    
     //Creature Feature featuring the creature
-    Creature C1(3,4,-2,true,0);
+    Creature C1(3,4,-2,true,1);
+
+    std::vector<int> runeIds = {1, 2, 5, 6, 7}; // whatever C1 has
+    std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
+
+    Terminal terminal(c1Runes, &C1, map);
+    terminal.setupTerminal(C1);
+    
+    
 
     // Terminal terminal;
     // terminal.setupTerminal(C1);
@@ -102,17 +109,41 @@ int main(){
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
 
+        bool wasToggled = guiButton.getToggle();
         guiButton.update(mouse_position);
+        bool justToggled = !wasToggled && guiButton.getToggle();
+
+        if (guiButton.getToggle()) {
+            terminal.update(mouse_position);
+            if (terminal.isCompiled()) {
+                auto queue = terminal.getQueue();
+                // TODO: iterate queue and call activate() on each rune
+                for (auto* r : queue) r->activate({});
+                terminal.resetCompile();
+                // or 
+                // if (terminal.isCompiled()) {
+                //     compiler.run(terminal.getQueue());
+                //     terminal.resetCompile();
+                // }
+            }
+        }
+        if (terminal.isExitRequested()) {
+            guiButton.setToggle(false);
+            terminal.resetExit();
+        }
 
         // displaying stuff
         window.clear();
+
         map.draw(window);
+
         C1.drawCreature(window,map);
+
         player.printPlayer(window);
-        if (guiButton.getToggle()) {
-            //terminal.drawTerminal(window);
-        }
-        else {
+
+        if (guiButton.getToggle() && !justToggled) {
+            terminal.drawTerminal(window);
+        } else {
             window.draw(myButton);
         }
 

@@ -18,6 +18,7 @@ int main(){
     float windowX = (float)windX;
     float windowY = (float)windY; 
 
+    Player player;
     Map map(windowX, windowY);
     sf::Font font;
     if(!font.openFromFile("ttf/Hack-Regular.ttf")){
@@ -48,6 +49,18 @@ int main(){
             if(event->is<sf::Event::Closed>())
                 window.close();
         }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){
+            player.moveBy(0,1);
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){
+            player.moveBy(0,1);
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
+            player.moveBy(0,1);
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
+            player.moveBy(0,1);
+        }
         // mouse position
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
@@ -57,6 +70,7 @@ int main(){
         // displaying stuff
         window.clear();
         map.draw(window);
+        player.printPlayer(window);
         if (guiButton.getToggle()) {
             window.draw(terminal);
         }

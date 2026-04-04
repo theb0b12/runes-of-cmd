@@ -1,9 +1,9 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
-class player {
+class Player {
     public:
-        player();
+        Player();
         float getXpos();
         float getYpos();
         int getFacing();

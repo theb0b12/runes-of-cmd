@@ -1,27 +1,27 @@
-#include "player.hpp"
+#include "Player.hpp"
 
 //constructor, there is no destructor or copy constructor as there is always only one player 
-player::player(){
+Player::Player(){
     xPos = 0;
     yPos = 0;
     isFacing = 1;
 }
 
 //getters
-float player::getXpos(){
+float Player::getXpos(){
     return xPos;
 }
 
-float player::getYpos(){
+float Player::getYpos(){
     return yPos;
 }
 
-int player::getFacing(){
+int Player::getFacing(){
     return isFacing;
 }
 
 //player moves then faces the direction the player is moving in
-void player::moveBy(float x, float y){
+void Player::moveBy(float x, float y){
     xPos += x;
     yPos += y;
     if(x > 0){

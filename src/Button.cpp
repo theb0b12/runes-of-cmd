@@ -36,15 +36,9 @@ void Button::update(sf::Vector2f mousePos)
     }
 
     // toggle logic (now internal)
-    if (isOver && mousePressed){
+    if (justReleased && pressedInside && isOver){
         toggle = !toggle;
     }
-
-    // // unlock when mouse is released outside interaction
-    // if (!mousePressed)
-    // {
-    //     lock = false;
-    // }
 
     // visual feedback
     if (isOver)
@@ -57,6 +51,9 @@ void Button::update(sf::Vector2f mousePos)
 bool Button::getToggle() const{
     return toggle;
 }
+
+
+
 
 // setters
 void Button::setToggle(bool value){

@@ -8,6 +8,7 @@ LockButton::LockButton(sf::RectangleShape* button)
 
 void LockButton::update(sf::Vector2f mousePos){
     Button::update(mousePos);
+    // toggle logic (now internal)
     if (getToggle()){
         lock = true;
     }

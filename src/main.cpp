@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Button.hpp"
+#include "LockButton.hpp"
 #include "Map.hpp"
 #include <iostream>
 
@@ -41,7 +41,7 @@ int main(){
     myButton.setOrigin(myButton.getGeometricCenter());
     myButton.setPosition({400.f, 300.f});
 
-    Button guiButton(&myButton);
+    LockButton guiButton(&myButton);
     
     while(window.isOpen()){
         while(const std::optional event = window.pollEvent()){

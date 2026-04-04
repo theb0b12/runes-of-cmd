@@ -7,6 +7,7 @@
 class Rune{
     public:
         Rune(std::string);
+        std::string getType() const { return type; }
         virtual int  activate(Rune*); //pure virtual function to be implemented by derived classes
     private:
         std::string type;

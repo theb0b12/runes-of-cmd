@@ -36,7 +36,6 @@ int Map::getYTiles(){
 
 //Draw the map
 void Map::draw(sf::RenderWindow& window){
-    std::cout << xTiles << std::endl;
     for(int i = 0; i < 12; i++){
         for(int j = 0; j < 6; j++){
             sf::RectangleShape tile(sf::Vector2f(tileWidth, tileHeight));

@@ -3,14 +3,36 @@
 
 //constructor, there is no destructor or copy constructor as there is always only one player 
 Player::Player(Map& m) : map(m){
-    xPos = 0;
-    yPos = 0;
+    xPos = map.getWidth()/2;
+    yPos = map.getHeight()/2;
     isFacing = 1;
     body = sf::CircleShape(50);
     
 }
 
 void Player::printPlayer(sf::RenderWindow& window){
+    while(map.occupied[xTile][yTile] != 0){
+        switch (isFacing)
+            {
+            case 1:
+                xPos--;
+                break;
+            case 2:
+                yPos--;
+                break;
+            case -1:
+                xPos++;
+                break;
+            case -2:
+                yPos++;
+            default:
+                break;
+            }
+        xTile = (xPos + 50 - (0.3f*map.getWidth())/0.7f)/map.getTileWidth();
+        yTile = (yPos + 50 - ((map.getHeight() - (map.getTileHeight() * 6))/6) * 3)/map.getTileHeight();
+    
+    }
+    
     body.setPosition({xPos,yPos});
     window.draw(body);
 }

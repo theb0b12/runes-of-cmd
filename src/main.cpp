@@ -60,6 +60,9 @@ std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
             case 7:
             output.push_back(Violence(holder,map));
             break;
+            case 8:
+            output.push_back(Rune("\n",holder,map));
+            break;
         }
     }
     return output;

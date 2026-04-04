@@ -4,8 +4,7 @@ Button::Button(sf::RectangleShape* button)
     : button(button),
       mousePressed(false),
       pressedInside(false),
-      toggle(false),
-      lock(false)
+      toggle(false)
 {}
 
 void Button::update(sf::Vector2f mousePos)
@@ -37,9 +36,8 @@ void Button::update(sf::Vector2f mousePos)
     }
 
     // toggle logic (now internal)
-    if (isOver && mousePressed && !lock){
+    if (isOver && mousePressed){
         toggle = !toggle;
-        lock = true;
     }
 
     // // unlock when mouse is released outside interaction
@@ -60,15 +58,7 @@ bool Button::getToggle() const{
     return toggle;
 }
 
-bool Button::getLock() const{
-    return lock;
-}
-
 // setters
 void Button::setToggle(bool value){
     toggle = value;
-}
-
-void Button::setLock(bool value){
-    lock = value;
 }

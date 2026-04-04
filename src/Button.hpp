@@ -2,25 +2,21 @@
 
 #include <SFML/Graphics.hpp>
 
-class Button
-{
-public:
-    explicit Button(sf::RectangleShape* button);
-    void update(sf::Vector2f mousePos);
+class Button{
+    public:
+        Button(sf::RectangleShape* button);
+        void virtual update(sf::Vector2f mousePos);
 
-    // getters
-    bool getToggle() const;
-    bool getLock() const;
+        // getters
+        bool getToggle() const;
 
-    // setters 
-    void setToggle(bool value);
-    void setLock(bool value);
+        // setters 
+        void setToggle(bool value);
 
-private:
-    sf::RectangleShape* button;
-    bool mousePressed;
-    bool pressedInside;
+    protected:
+        sf::RectangleShape* button;
+        bool mousePressed;
+        bool pressedInside;
 
-    bool toggle;
-    bool lock;
+        bool toggle;
 };

@@ -7,7 +7,7 @@ Creature::Creature(float x, float y, int hp, bool enemy){
     health = hp;
     isFacing = -1;
     isEnemy = enemy;
-    possibleRunes = std::vector<Rune>();
+    possibleRunes = std::vector<int>();
 }
 
 //getters
@@ -34,7 +34,7 @@ void Creature::moveBy(float x, float y){
 }
 
 //Add a rune to the creature's possible runes
-void Creature::addRune(Rune r){
+void Creature::addRune(int r){
     possibleRunes.push_back(r);
 }
 

@@ -5,7 +5,7 @@
 class Choice :public Rune{
     public:
         Choice();
-        int activate(Rune*) override; //override the pure virtual function from the base class
+        int activate(std::vector<Rune*>) override; //override the pure virtual function from the base class
 };
 
 #endif

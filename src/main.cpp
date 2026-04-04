@@ -5,6 +5,7 @@
 #include "Creature.hpp"
 #include "Player.hpp"
 #include "Map.hpp"
+#include "Terminal.hpp"
 #include <iostream>
 
 const int windX = 1920;
@@ -32,7 +33,9 @@ int main(){
     
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,0);
-    
+
+    Terminal terminal;
+    terminal.setupTerminal(C1);
     
     // create the terminal open button
     sf::RectangleShape myButton({200.f, 100.f});
@@ -73,7 +76,7 @@ int main(){
         C1.drawCreature(window,map);
         player.printPlayer(window);
         if (guiButton.getToggle()) {
-            window.draw(terminal);
+            terminal.drawTerminal(window);
         }
         else {
             window.draw(myButton);

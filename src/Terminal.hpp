@@ -21,8 +21,8 @@ class Terminal {
         
 
     private:
-        std::vector<typename sf::Text> _textArr;
-        std::vector<typename sf::Drawable> _terminalPieces;
+        std::vector<sf::Text> _textArr;
+        std::vector<sf::Drawable> _terminalPieces;
         int _bigPrime = 178697;
         
 

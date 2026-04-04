@@ -7,8 +7,6 @@
 using namespace std;
 // constructor
 Terminal::Terminal(){
-    sf::RectangleShape terminal;
-
     
 }
 
@@ -24,13 +22,20 @@ void Terminal::setupTerminal(Creature creature){
         std::cerr << "Failed to load font\n";
     }
     // outer terminal box
-    // create the terminal thing
     sf::RectangleShape terminalBBox({1920 * 0.8f, 1080 * 0.8f});
     terminalBBox.setFillColor(sf::Color{ 65, 65, 65, 1 }); // gray ish
     terminalBBox.setOrigin(terminalBBox.getGeometricCenter());
     terminalBBox.setPosition({1920.f/2, 1080.f/2});
 
+    _terminalPieces.push_back(terminalBBox);
+
     // box around text and "code editor"
+    sf::RectangleShape terminalSBox({1920 * 0.8f, 1080 * 0.4f});
+    terminalSBox.setFillColor(sf::Color{ 79, 79, 79, 1 }); // gray ish
+    terminalSBox.setOrigin(terminalSBox.getGeometricCenter());
+    terminalSBox.setPosition({1920.f/2, 1080.f/4});
+
+    _terminalPieces.push_back(terminalSBox);
 
     // terminal title text thing
     sf::Text title(font);
@@ -46,6 +51,7 @@ void Terminal::setupTerminal(Creature creature){
     _terminalPieces.push_back(title);
 
     // rune display area
+
 
 
     // rune selection area

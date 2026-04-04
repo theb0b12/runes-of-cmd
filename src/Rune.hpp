@@ -1,6 +1,5 @@
 #ifndef RUNE_HPP
 #define RUNE_HPP
-
 #include <string>
 
 

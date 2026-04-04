@@ -1,6 +1,6 @@
 #include "Rune.hpp"
 
-//Types can only be: "Sight", "Choice", "Harmony", "Discord", "Wind"
+//Types can only be: "Sight", "Choice", "Harmony", "Discord", "Wind", "Twist", "Violence"
 Rune::Rune(std::string t, Creature* h, Map& m)
     : type(t), holder(h), map(m) {
 }

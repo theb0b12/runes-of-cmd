@@ -1,6 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
+#include "Rune.hpp"
+#include "rune-types/TwistRune.hpp"
+#include "rune-types/SightRune.hpp"
+#include "rune-types/ChoiceRune.hpp"
+#include "rune-types/WindRune.hpp"
+#include "rune-types/ViolenceRune.hpp"
 #include "LockButton.hpp"
 #include "Creature.hpp"
 #include "Player.hpp"
@@ -12,7 +18,7 @@ const int windX = 1920;
 const int windY = 1080;
 
 
-
+std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map);
 int main(){
     sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default/*,sf::State::Fullscreen*/);
     sf::Vector2u windowSize = window.getSize();
@@ -83,6 +89,37 @@ int main(){
         }
 
         window.display();
+
+    }
+}
+
+ std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
+    std::vector <Rune> output;
+    for(int i = 0; i < vec.size(); i++ ){
+        switch(vec[i]){
+            case 1:
+            output.push_back(Sight(holder,map));
+            break;
+            case 2:
+            output.push_back(Choice(holder,map));
+            break;
+            case 3:
+            output.push_back(Rune("Harmony",holder,map));
+            break;
+            case 4:
+            output.push_back(Rune("Discord",holder,map));
+            break;
+            case 5:
+            output.push_back(Wind(holder,map));
+            break;
+            case 6:
+            output.push_back(Twist(holder,map));
+            break;
+            case 7:
+            output.push_back(Violence(holder,map));
+            break;
+        }
+        return output;
 
     }
 }

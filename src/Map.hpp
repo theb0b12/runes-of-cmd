@@ -13,6 +13,7 @@ public:
     float getTileHeight();
     int getXTiles();
     int getYTiles();
+    int occupied[12][6];
 private:
     float width;
     float tileWidth;

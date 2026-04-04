@@ -7,6 +7,7 @@ Map::Map(float w, float h){
     yTiles = 6;
     tileWidth = width / xTiles;
     tileHeight = tileWidth;
+    occupied[12][6] = {0};
 }
 
 // Getters

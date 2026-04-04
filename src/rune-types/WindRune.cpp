@@ -18,10 +18,10 @@ int Wind::activate(std::vector<Rune*> r){
                 holder->moveBy(-1.0, 0);
                 break;
             case 2: //facing up
-                holder->moveBy(0, 1.0); //move up
+                holder->moveBy(0, -1.0); //move up
                 break;
             case -2: //facing down
-                holder->moveBy(0, -1.0); //move down
+                holder->moveBy(0, 1.0); //move down
                 break;
         }
     return 0;

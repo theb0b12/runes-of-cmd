@@ -1,21 +1,22 @@
 #include "Creature.hpp"
 
 //constructor
-Creature::Creature(float x, float y, int hp, bool enemy){
+Creature::Creature(int x, int y, int hp, bool enemy, int count){
     xPos = x;
     yPos = y;
     health = hp;
     isFacing = -1;
     isEnemy = enemy;
     possibleRunes = std::vector<int>();
+    id = count;
 }
 
 //getters
-float Creature::getXpos(){
+int Creature::getXpos(){
     return xPos;
 }
 
-float Creature::getYpos(){
+int Creature::getYpos(){
     return yPos;
 }
 
@@ -27,8 +28,12 @@ int Creature::getFacing(){
     return isFacing;
 }
 
+bool Creature::getEnemy(){
+    return isEnemy;
+}
+
 //creature moves then faces the direction the creature is moving in
-void Creature::moveBy(float x, float y){
+void Creature::moveBy(int x, int y){
     xPos += x;
     yPos += y;
 }
@@ -38,8 +43,40 @@ void Creature::addRune(int r){
     possibleRunes.push_back(r);
 }
 
-//Check if there is an enemy in front of the creature
-int Creature::inFront(){
+
+void Creature::drawCreature(sf::RenderWindow& window, Map& map){
+    //same position as map tiles
+    body.setPosition({xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f, (yPos - 3) * map.getTileHeight() + map.getHeight()/2});
+    map.occupied[xPos][yPos] = id;
+    window.draw(body);
+}
+
+//Check if there is an enemy in front of the creature, returns id of creature if found and 0 if empty
+int Creature::inFront(Map& map){
+if(isFacing == 2){
+    if(yPos == 0)
+        return 0;
+    else
+        return map.occupied[xPos][yPos-1];
+}
+if(isFacing == -2){
+    if(yPos == 6)
+        return 0;
+    else
+        return map.occupied[xPos][yPos+1];
+}
+if(isFacing == 1){
+    if(xPos == 12)
+        return 0;
+    else
+        return map.occupied[xPos+1][yPos];
+}
+if(isFacing == -1){
+    if(xPos == 0)
+        return 0;
+    else
+        return map.occupied[xPos-1][yPos];
+}
 
 //check if there is an object in front of the creature and wheather it is an enemy
 return 0;

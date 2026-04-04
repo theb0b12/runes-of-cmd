@@ -1,10 +1,10 @@
-#ifndef CHOICE_HPP
-#define CHOICE_HPP
+#ifndef TWIST_HPP
+#define TWIST_HPP
 #include "Rune.hpp"
 
-class Choice :public Rune{
+class Twist :public Rune{
     public:
-        Choice(Creature* h); 
+        Twist(Creature* h); 
         int activate(std::vector<Rune*>) override; //override the pure virtual function from the base class
 };
 

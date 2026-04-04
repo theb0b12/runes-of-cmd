@@ -2,15 +2,17 @@
 #define RUNE_HPP
 #include <string>
 #include <vector>
-
+#include "Creature.hpp"
 
 class Rune{
     public:
-        Rune(std::string);
+        Rune(std::string, Creature*);
         std::string getType() const { return type; }
         virtual int  activate(std::vector<Rune*>); //pure virtual function to be implemented by derived classes
+        Creature* getHolder() const { return holder; }
     private:
         std::string type;
+        Creature * holder; //pointer to the creature that holds the rune, can be nullptr if not held by any creature
 };
 
 #endif

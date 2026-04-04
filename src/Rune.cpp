@@ -1,8 +1,9 @@
 #include "Rune.hpp"
 
-
-Rune::Rune(std::string t){
+//Types can only be: "Sight", "Choice", "Harmony", "Discord"
+Rune::Rune(std::string t, Creature* h) {
     type = t;
+    holder = h;
 }
 
 int Rune::activate(std::vector<Rune*> r){

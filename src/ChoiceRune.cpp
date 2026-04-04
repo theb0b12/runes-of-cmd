@@ -1,6 +1,6 @@
 #include "ChoiceRune.hpp"
 
-Choice::Choice() : Rune("Choice"){}
+Choice::Choice(Creature* h) : Rune("Choice", h){}
 
 int Choice::activate(std::vector<Rune*> r){
     if(r.empty() || r[0]->getType() != "Sight"){

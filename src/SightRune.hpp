@@ -4,7 +4,7 @@
 
 class Sight :public Rune{
     public:
-        Sight();
+        Sight(Creature* h);
         int activate(std::vector<Rune*>) override; //override the pure virtual function from the base class
 };
 

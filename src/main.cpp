@@ -13,30 +13,26 @@ void processButton(sf::RectangleShape *button, sf::Vector2f mousePos)
     bool justPressed = false;
     bool justReleased = false;
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
-    {
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
         if (!mousePressed)
             justPressed = true;
 
         mousePressed = true;
     }
-    else
-    {
+    else{
         if (mousePressed)
             justReleased = true;
 
         mousePressed = false;
     }
 
-    if (isOver && justPressed)
-    {
+    if (isOver && justPressed){
         pressedInside = true;
-        std::cout << "Press\n";
+        // std::cout << "Press\n";
     }
 
-    if (justReleased && pressedInside)
-    {
-        std::cout << "Release\n";
+    if (justReleased && pressedInside){
+        // std::cout << "Release\n";
         pressedInside = false;
     }
 
@@ -78,13 +74,14 @@ int main(){
                 window.close();
         }
         // mouse position
-        sf::Vector2f mouse_position = sf::Vector2f(sf::Mouse::getPosition(window));
+        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+        sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
 
         processButton(&guiButton, mouse_position);
 
         window.clear(); 
         window.draw(guiButton);
-        window.draw(text);
+        // window.draw(text);
         window.display();
 
     }

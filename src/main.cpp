@@ -63,7 +63,7 @@ void processButton(sf::RectangleShape *guiButton, sf::Vector2f mouse_position){
 }
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode({720, 1280}), "Runes of CMD");
+    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Runes of CMD");
 
 
     sf::Font font;

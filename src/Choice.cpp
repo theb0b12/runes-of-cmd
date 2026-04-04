@@ -1,4 +1,4 @@
-#include "../Rune.hpp"
+#include "Rune.hpp"
 #include "Choice.hpp"
 
 Choice::Choice() : Rune("Choice"){}

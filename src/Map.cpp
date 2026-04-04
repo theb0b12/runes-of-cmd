@@ -1,12 +1,12 @@
 #include "Map.hpp"
 
 Map::Map(float w, float h){
-    width = w * 0.6;
-    height = h * 0.3;
+    width = w * 0.7;
+    height = h;
     xTiles = 12;
     yTiles = 6;
     tileWidth = width / xTiles;
-    tileHeight = height / yTiles;
+    tileHeight = tileWidth;
 }
 
 // Getters
@@ -34,11 +34,30 @@ void Map::draw(sf::RenderWindow& window){
     for(int i = 0; i < xTiles; i++){
         for(int j = 0; j < yTiles; j++){
             sf::RectangleShape tile(sf::Vector2f(tileWidth, tileHeight));
-            tile.setPosition({i * tileWidth + (width * 0.4)/0.6, j * tileHeight + (height *0.35)/0.3});
-            tile.setFillColor(sf::Color(100, 100, 100));
-            tile.setOutlineThickness(1);
+            tile.setPosition({i * tileWidth + (width * 0.3f)/0.7f, (j - 3) * tileHeight + height/2});
+            if((i+j) % 2 == 0){
+              tile.setFillColor(sf::Color(25, 100, 25));  
+            }else{
+                tile.setFillColor(sf::Color(50, 175, 50));  
+            }
+            
+            tile.setOutlineThickness(2);
             tile.setOutlineColor(sf::Color(50, 50, 50));
             window.draw(tile);
         }
+    }
+
+    sf:: RectangleShape castle(sf::Vector2f{(width/0.7f) * 0.3f, height});
+    castle.setFillColor(sf::Color(100,100,100));
+    castle.setOutlineColor(sf::Color(50,50,50));
+    window.draw(castle);
+    sf::RectangleShape stands(sf::Vector2{width, (height - (tileHeight * 6))/6});
+    for(int i = 0 ; i < 3; i++){
+        stands.setFillColor(sf::Color(150/(i+1),75/(i+1),0));
+        stands.setPosition({(width/0.7f)*0.3f,((height - (tileHeight * 6))/6) * i});
+        window.draw(stands);
+
+        stands.setPosition({(width/0.7f)*0.3f,(height - ((height - (tileHeight * 6))/6) * (i+1))});
+        window.draw(stands);
     }
 }

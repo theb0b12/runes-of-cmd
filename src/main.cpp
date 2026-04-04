@@ -155,12 +155,13 @@ int main(){
 
 
         //spawn tests
-        // spawnTimer--;
-        // if(spawnTimer < 0){
-        //     createCreature(true);
-        //     spawnTimer = 100;
-        // }
-        createCreature(false);
+        spawnTimer--;
+        if(spawnTimer < 0){
+            createCreature(true);
+            createCreature(false);
+            spawnTimer = 100;
+        }
+        
 
         // displaying stuff
         window.clear();

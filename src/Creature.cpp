@@ -3,13 +3,13 @@
 //constructor
 Creature::Creature(int x, int y, int hp, bool enemy, int count){
     xPos = x;
-    if(xPos > 12)
-        xPos = 12;
+    if(xPos > 11)
+        xPos = 11;
     if(xPos < 0)
         xPos = 0;
     yPos = y;
-    if(yPos > 6)
-        yPos = 6;
+    if(yPos > 5)
+        yPos = 5;
     if(yPos < 0)
         yPos = 0;
     health = hp;
@@ -61,7 +61,6 @@ void Creature::addRune(int r){
 void Creature::drawCreature(sf::RenderWindow& window, Map& map){
     //same position as map tiles
     body.setRadius(map.getTileHeight()/2);
-    body.setFillColor(sf::Color::Red);
     body.setPosition({xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f, (yPos - 3) * map.getTileHeight() + map.getHeight()/2});
     map.occupied[xPos][yPos] = id;
     window.draw(body);

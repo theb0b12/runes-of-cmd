@@ -1,9 +1,5 @@
 #include "../Rune.hpp"
-class Choice :public Rune{
-    public:
-        Choice();
-        int activate(Rune*) override; //override the pure virtual function from the base class
-};
+#include "Choice.hpp"
 
 Choice::Choice() : Rune("Choice"){}
 

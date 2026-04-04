@@ -46,7 +46,7 @@ all: $(TARGET)
 	@echo "** Building the game"
 
 $(TARGET): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $@ $^ $(LIBS)
+	$(CXX) -o $@ $^ $(LIBS)
 
 
 # --- Compile rule ---

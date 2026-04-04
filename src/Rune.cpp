@@ -12,7 +12,7 @@ static sf::Color colorForType(const std::string& t) {
     return { 180, 180, 180 };                         // gray fallback
 }
 
-//Types can only be: "Sight", "Choice", "Harmony", "Discord", "Wind", "Twist", "Violence"
+//Types can only be: "Sight", "Choice", "Harmony", "Discord", "Wind", "Twist", "Violence" "\n"
 Rune::Rune(std::string t, Creature* h, Map& m)
     : type(t), holder(h), map(m) {
 }

@@ -3,13 +3,26 @@
 //constructor
 Creature::Creature(int x, int y, int hp, bool enemy, int count){
     xPos = x;
+    if(xPos > 12)
+        xPos = 12;
+    if(xPos < 0)
+        xPos = 0;
     yPos = y;
+    if(yPos > 6)
+        yPos = 6;
+    if(yPos < 0)
+        yPos = 0;
     health = hp;
     isFacing = -1;
     isEnemy = enemy;
     possibleRunes = std::vector<int>();
     body = sf::CircleShape(50);
     id = count;
+    if(id % 2 == 0){
+        body.setFillColor(sf::Color::Blue);
+    } else {
+        body.setFillColor(sf::Color::Red);
+    }
 }
 
 //getters

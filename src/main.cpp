@@ -1,5 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <cmath>
+#include <random>
 
 #include "Rune.hpp"
 #include "rune-types/TwistRune.hpp"
@@ -16,6 +18,22 @@
 
 const int windX = 1920;
 const int windY = 1080;
+
+std::vector <Creature> creVec;
+int numGood = 0;
+int numBad = 0;
+
+std::random_device rd;
+std::mt19937 mt(rd());
+std::uniform_int_distribution<int> intDist(0,5);
+
+void createCreature(bool enemy){
+    if(enemy){
+        creVec.push_back(Creature(11,intDist(mt), 3,  true, numBad * 2 + 1));
+    } else {
+        creVec.push_back(Creature(0,intDist(mt), 3, false, numGood * 2 + 2));
+    }
+}
 
 std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
     std::vector <Rune> output;
@@ -47,6 +65,8 @@ std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
     return output;
 }
 
+
+int spawnTimer = 800;
 int main(){
     sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default/*,sf::State::Fullscreen*/);
     sf::Vector2u windowSize = window.getSize();
@@ -132,11 +152,25 @@ int main(){
             terminal.resetExit();
         }
 
+
+
+        //spawn tests
+        // spawnTimer--;
+        // if(spawnTimer < 0){
+        //     createCreature(true);
+        //     spawnTimer = 100;
+        // }
+        createCreature(false);
+
         // displaying stuff
         window.clear();
 
         map.draw(window);
 
+
+        for(int i = 0; i < creVec.size(); i++){
+            creVec[i].drawCreature(window,map);
+        }
         C1.drawCreature(window,map);
 
         player.printPlayer(window);

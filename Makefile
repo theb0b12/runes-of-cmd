@@ -6,6 +6,9 @@ TARGET = $(PROJECT).exe
 
 
 all: $(TARGET)
+
+
+$(TARGET): $(OBJECTS)
 		@echo "** Building the game"
 		$(TARGET): $(OBJECTS)
 	$(CXX) -o $@ $^ $(LIBS)

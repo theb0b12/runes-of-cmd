@@ -1,12 +1,17 @@
 #include "Terminal.hpp"
-
+#include "Creature.hpp"
+#include "Map.hpp"
+ 
 
 #include <iostream>
 #include <string>
 
-using namespace std;
+
 // constructor
-Terminal::Terminal(){
+Terminal::Terminal(std::vector <Rune> runeArr, Creature* creature, Map& m){
+    map = m;
+    this->runeArr = runeArr;
+    this->creature = creature;
     
 }
 
@@ -40,7 +45,7 @@ void Terminal::setupTerminal(Creature creature){
     // terminal title text thing
     sf::Text title(font);
 
-    string id = "[" + to_string(creature.getId() * _bigPrime) + "~]$ ";
+    std::string id = "[" + std::to_string(creature.getId() * _bigPrime) + "~]$ ";
     title.setString(id);
     title.setCharacterSize(15);
 
@@ -51,7 +56,7 @@ void Terminal::setupTerminal(Creature creature){
     _terminalPieces.push_back(title);
 
     // rune display area
-
+    
 
 
     // rune selection area

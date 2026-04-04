@@ -5,6 +5,7 @@
 #include <SFML/Window.hpp>
 
 #include "Creature.hpp"
+#include "Map.hpp"
 #include "Rune.hpp"
 
 #include <string>
@@ -12,7 +13,7 @@
 
 class Terminal {
     public:
-        Terminal();
+        Terminal(std::vector <Rune> runeArr, Creature*, Map&);
         void update(std::string);
         void drawTerminal(sf::RenderWindow&);
 
@@ -23,6 +24,10 @@ class Terminal {
     private:
         std::vector<sf::Text> _textArr;
         std::vector<sf::Drawable> _terminalPieces;
+        std::vector <Rune> runeArr;
+        Creature* creature;
+        static Map& map;
+
         int _bigPrime = 178697;
         
 

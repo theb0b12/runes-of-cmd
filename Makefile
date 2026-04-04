@@ -9,7 +9,6 @@ ifeq ($(shell echo "Windows"), "Windows")
     RMDIR   := rd /s /q
     MKDIR   := mkdir
     CP      := copy /y
-    DIR_SEP := /  # Use forward slashes (Windows supports this)
     EXE_EXT := .exe
  else
      RM      := rm -f
@@ -32,13 +31,13 @@ CXX = g++
 CPPVERSION = -std=c++17
 CXXFLAGS = -Wall -Wextra -g $(CPPVERSION)
 
-TARGET =  $(BIN_DIR)$(DIR_SEP)$(PROJECT)$(EXE_EXT)
+TARGET =  $(BIN_DIR)/$(PROJECT)$(EXE_EXT)
 
 # --- SFML Libraries ---
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 # --- Derived Variables ---
-OBJECTS = $(patsubst $(SRC_DIR)$(DIR_SEP)%.cpp,$(OBJ_DIR)$(DIR_SEP)%.o,$(SRC_FILES))
+OBJECTS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC_FILES))
 
 
 # --- Default rule ---
@@ -50,10 +49,10 @@ $(TARGET): $(OBJECTS)
 
 
 # --- Compile rule ---
-$(OBJ_DIR)$(DIR_SEP)%.o: $(SRC_DIR)$(DIR_SEP)%.cpp $(H_FILES)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(H_FILES)
 	$(MKDIR) $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # --- Run target ---
 run: $(TARGET)
-	.$(DIR_SEP)$(TARGET)
+	./$(TARGET)

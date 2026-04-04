@@ -1,11 +1,12 @@
 TARGET = rune
 SRC_DIR = src
+RUNE_DIR = rune-types
 OBJ_DIR = obj
 
 MKDIR = mkdir -p
 
 # ALL CPP IMPLEMENTATION FILES THAT MAKE UP THE PROJECT
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/$(RUNE_DIR)*.cpp)
 
 # ALL HEADER FILES
 H_FILES = $(wildcard $(SRC_DIR)/*.h) $(wildcard $(SRC_DIR)/*.hpp)

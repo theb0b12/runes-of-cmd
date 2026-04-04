@@ -10,12 +10,11 @@ void processButton(sf::RectangleShape *guiButton, sf::Vector2f mouse_position){
 
     // state of mouse
     bool isMousePressed = false;
-
-    // state of mouse
     bool onMousePress   = false;
     bool onMouseRelease = false;
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
-        if (not isMousePressed)
+        if (!isMousePressed)
             onMousePress = true;
         isMousePressed = true;
     }
@@ -27,10 +26,7 @@ void processButton(sf::RectangleShape *guiButton, sf::Vector2f mouse_position){
 
     // when mouse is over button
     if (guiButton->getGlobalBounds().contains(mouse_position)){
-        // on mouse enter
-        if (not isOver)
-            std::cout << "Enter\n";
-
+        
         // on mouse press
         if (onMousePress){
             std::cout << "Press\n";
@@ -98,7 +94,7 @@ int main(){
                 window.close();
         }
         // mouse position
-        auto mouse_position = sf::Vector2f(sf::Mouse::getPosition(window));
+        sf::Vector2f mouse_position = sf::Vector2f(sf::Mouse::getPosition(window));
 
         processButton(&guiButton, mouse_position);
 

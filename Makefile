@@ -1,4 +1,4 @@
-TARGET = rune
+PROJECT = runes-of-cmd
 SRC_DIR = src
 RUNE_DIR = rune-types
 OBJ_DIR = obj
@@ -16,6 +16,12 @@ H_FILES = $(wildcard $(SRC_DIR)/*.h) $(wildcard $(SRC_DIR)/*.hpp)
 CXX = g++
 CPPVERSION = -std=c++17
 CXXFLAGS = -Wall -Wextra -g $(CPPVERSION)
+
+ifeq ($(shell echo "Windows"), "Windows")
+	TARGET = $(PROJECT).exe
+else
+	TARGET = $(PROJECT)
+endif
 
 # --- SFML Libraries ---
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio

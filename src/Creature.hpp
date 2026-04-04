@@ -1,5 +1,6 @@
 #ifndef CREATURE_HPP
 #define CREATURE_HPP
+
 #include "Rune.hpp"
 #include <vector>
 

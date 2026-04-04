@@ -1,4 +1,4 @@
-#include "player.hpp"
+#include "Player.hpp"
 
 //constructor, there is no destructor or copy constructor as there is always only one player 
 player::player(){

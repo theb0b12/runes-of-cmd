@@ -5,13 +5,13 @@
 #include "Map.hpp"
 #include <iostream>
 
-const int windX = 1280;
-const int windY = 720;
+const int windX = 1920;
+const int windY = 1080;
 
 
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default,sf::State::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default/*,sf::State::Fullscreen*/);
     sf::Vector2u windowSize = window.getSize();
     auto [windX, windY] = windowSize;
     float windowX = (float)windX;

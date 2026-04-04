@@ -29,22 +29,19 @@ int Player::getFacing(){
     return isFacing;
 }
 
-//player moves then faces the direction the player is moving in
-void Player::moveBy(float x, float y){
-    xPos += x;
-    yPos += y;
-    if(x > 0){
-        isFacing = 1;
-    }
-    else if(x < 0){
-        isFacing = -1;
-    }
+// player moves then faces the direction the player is moving in
+void Player::moveBy(float x, float y, float dt){
+    xPos += x * _speed * dt;
+    yPos += y * _speed * dt;
 
-    if(y > 0){
-        isFacing = 2;
-    }
-    else if(y < 0){
-        isFacing = -2;
-    }
+    if (x > 0) isFacing = 1;
+    else if (x < 0) isFacing = -1;
+
+    if (y > 0) isFacing = 2;
+    else if (y < 0) isFacing = -2;
 }
 
+
+void Player::setSpeed(float speed){
+    _speed = speed;
+}

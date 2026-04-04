@@ -17,9 +17,17 @@ int main(){
     auto [windX, windY] = windowSize;
     float windowX = (float)windX;
     float windowY = (float)windY; 
+    // frame rate set as not to have it hardware limited
+    window.setFramerateLimit(60);
+
+    // clock instantiation
+    sf::Clock clock;
 
     Player player;
+    player.setSpeed(300);
+
     Map map(windowX, windowY);
+
     sf::Font font;
     if(!font.openFromFile("ttf/Hack-Regular.ttf")){
         std::cerr << "Failed to load font\n";
@@ -49,17 +57,20 @@ int main(){
             if(event->is<sf::Event::Closed>())
                 window.close();
         }
+        float dt = clock.restart().asSeconds();
+
+        // player controls
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){
-            player.moveBy(0,1);
+            player.moveBy(0,1, dt);
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){
-            player.moveBy(0,1);
+            player.moveBy(0,-1, dt);
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
-            player.moveBy(0,1);
+            player.moveBy(1,0, dt);
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
-            player.moveBy(0,1);
+            player.moveBy(-1,0, dt);
         }
         // mouse position
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);

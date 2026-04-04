@@ -11,12 +11,16 @@ class Player {
         float getYpos();
         void printPlayer(sf::RenderWindow&);
         int getFacing();
-        void moveBy(float, float);
+        void moveBy(float, float, float);
+
+        void setSpeed(float);
     private:
         float xPos;
         float yPos;
         int isFacing;
         sf::CircleShape body;
+
+        float _speed = 10.f;
 };
 
 

@@ -26,11 +26,9 @@ void processButton(sf::RectangleShape *guiButton, sf::Vector2f mouse_position){
 
     // when mouse is over button
     if (guiButton->getGlobalBounds().contains(mouse_position)){
-        
         // on mouse press
         if (onMousePress){
             std::cout << "Press\n";
-
             // set pressed inside
             isPressedInside = true;
         }

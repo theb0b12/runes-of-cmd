@@ -1,4 +1,5 @@
 #include "Creature.hpp"
+
 //constructor
 Creature::Creature(float x, float y, int hp){
     xPos = x;

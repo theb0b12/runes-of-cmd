@@ -58,7 +58,6 @@ private:
     // flat visual tokens: one shape + button + label per placed rune
     std::vector<sf::RectangleShape>              _tokenShapes;
     std::vector<std::unique_ptr<SimpleButton>>   _tokenButtons;
-    std::vector<std::optional<sf::Text>>         _tokenLabels;
     std::vector<bool>                            _prevTokenState;
     // line number gutter
     std::vector<sf::RectangleShape>      _lineNumberBgs;

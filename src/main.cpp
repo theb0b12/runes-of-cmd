@@ -90,7 +90,7 @@ int main(){
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,1);
 
-    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4}; // whatever C1 has
+    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // whatever C1 has
     std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
 
 

@@ -87,7 +87,7 @@ void Terminal::setupTerminal(Creature& c) {
 
     _pickerCardShapes.reserve(runeArr.size());
 
-    
+
     float cardStartX = o.x + PAD * 2;
     float cardY      = pickerY + PAD * 2;
     for (int i = 0; i < (int)runeArr.size(); i++) {
@@ -102,16 +102,13 @@ void Terminal::setupTerminal(Creature& c) {
         card.setOutlineColor({ 60, 60, 80 });
         card.setOutlineThickness(1.5f);
         _pickerCardShapes.push_back(card);
-        _pickerButtons.push_back(
-            std::make_unique<SimpleButton>(&_pickerCardShapes.back())
-        );
+        _pickerButtons.push_back(std::make_unique<SimpleButton>(&_pickerCardShapes.back()));
 
-        bool isWind = (runeArr[i].getType() == "Wind");
+        bool isNullTerminator = (runeArr[i].getType() == "\n");
         _pickerLabels.push_back(sf::Text(_font));
-        _pickerLabels.back()->setString(isWind ? "Wind  \\n" : runeArr[i].getType());
+        _pickerLabels.back()->setString(isNullTerminator ? "\\n" : runeArr[i].getType());
         _pickerLabels.back()->setCharacterSize(11);
-        _pickerLabels.back()->setFillColor(
-            isWind ? sf::Color{ 180, 230, 255 } : sf::Color::White);
+        _pickerLabels.back()->setFillColor(isNullTerminator ? sf::Color{ 180, 230, 255 } : sf::Color::White);
         _pickerLabels.back()->setPosition({ cx, cy + TILE + 2.f });
     }
     _prevPickerState.assign(_pickerButtons.size(), false);
@@ -161,7 +158,6 @@ void Terminal::setupTerminal(Creature& c) {
 void Terminal::rebuildEditor() {
     _tokenShapes.clear();
     _tokenButtons.clear();
-    _tokenLabels.clear();
     _prevTokenState.clear();
 
     const sf::Vector2f o      = panelOrigin();
@@ -180,8 +176,8 @@ void Terminal::rebuildEditor() {
 
         for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
             Rune* r     = _lines[li][ti];
-            bool isWind = (r->getType() == "Wind");
-            float tokenW = isWind ? tokenH : (TILE * 0.85f);
+            bool isNullTerminator = (r->getType() == "\n");
+            float tokenW = isNullTerminator ? tokenH : (TILE * 0.85f);
 
             sf::RectangleShape tok({ tokenW, tokenH });
             tok.setPosition({ tokenX, tokenY });
@@ -194,11 +190,11 @@ void Terminal::rebuildEditor() {
             );
             _prevTokenState.push_back(false);
 
-            _tokenLabels.push_back(sf::Text(_font));
-            _tokenLabels.back()->setString(isWind ? u8"\u21b5" : r->getType().substr(0, 4));
-            _tokenLabels.back()->setCharacterSize(10);
-            _tokenLabels.back()->setFillColor(sf::Color::White);
-            _tokenLabels.back()->setPosition({ tokenX + 3.f, tokenY + tokenH / 2.f - 7.f });
+            // _tokenLabels.push_back(sf::Text(_font));
+            // _tokenLabels.back()->setString(isWind ? u8"\u21b5" : r->getType().substr(0, 4));
+            // _tokenLabels.back()->setCharacterSize(10);
+            // _tokenLabels.back()->setFillColor(sf::Color::White);
+            // _tokenLabels.back()->setPosition({ tokenX + 3.f, tokenY + tokenH / 2.f - 7.f });
 
             tokenX += tokenW + tokenPad;
         }
@@ -233,9 +229,9 @@ void Terminal::update(sf::Vector2f mouse) {
         if (cur != _prevPickerState[i]) {
             _prevPickerState[i] = cur;
             Rune* r     = &runeArr[i];
-            bool isWind = (r->getType() == "Wind");
+            bool isNullTerminator = (r->getType() == "\n");
             if (_cursorLine < MAX_LINES) {
-                if (isWind) {
+                if (isNullTerminator) {
                     if ((int)_lines[_cursorLine].size() < MAX_PER_LINE)
                         _lines[_cursorLine].push_back(r);
                     _program.push_back(r);
@@ -319,7 +315,6 @@ void Terminal::drawTerminal(sf::RenderWindow& window) {
 
     // tokens
     for (auto& tok : _tokenShapes) window.draw(tok);
-    for (auto& lbl : _tokenLabels) window.draw(*lbl);
 
     // picker
     window.draw(_pickerBg);

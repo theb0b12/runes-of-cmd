@@ -5,17 +5,17 @@
 #include "Map.hpp"
 #include <iostream>
 
-const int windowX = 1280;
-const int windowY = 720;
+const int windX = 1280;
+const int windY = 720;
 
 
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode({windowX, windowY}), "Runes of CMD",sf::Style::Default,sf::State::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default,sf::State::Fullscreen);
     sf::Vector2u windowSize = window.getSize();
-    auto [windowX, windowY] = windowSize;
-    windowX = (float)windowX;
-    windowY = (float)windowY;
+    auto [windX, windY] = windowSize;
+    float windowX = (float)windX;
+    float windowY = (float)windY; 
 
     Map map(windowX, windowY);
 
@@ -32,7 +32,7 @@ int main(){
 
 
     // create the terminal thing
-    sf::RectangleShape terminal({windowX*0.7, windowY*0.7});
+    sf::RectangleShape terminal({windowX * 0.7f,windowY * 0.7f});
     terminal.setOrigin(terminal.getGeometricCenter());
     terminal.setPosition({windowX/2, windowY/2});
     

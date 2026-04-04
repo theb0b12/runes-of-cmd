@@ -6,8 +6,8 @@ main.o: src/main.cpp
 		g++ -c "src/main.cpp" -o main.o 
 
 
-player.o: src/Player.cpp
-		g++ -c "src/Player.cpp" Player.o
+Player.o: src/Player.cpp
+		g++ -c "src/Player.cpp" -o Player.o
 
 # enemy.o: enemy.cpp
 # 		g++ -c "enemy.cpp" -o enemy.o
@@ -24,5 +24,5 @@ game: main.o Player.o #enemy.o projectile.o summon.o
 		@echo "** Building the game"
 		g++ -o game main.o Player.o $(LIBS)
 
-run: game.o
+run: game
 		./game

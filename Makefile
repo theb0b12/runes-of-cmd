@@ -1,28 +1,17 @@
 LIBS= -Lsrc/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
-
-all: game
-
-main.o: src/main.cpp
-		g++ -c "src/main.cpp" -o main.o 
-
-
-Player.o: src/Player.cpp
-		g++ -c "src/Player.cpp" -o Player.o
-
-# enemy.o: enemy.cpp
-# 		g++ -c "enemy.cpp" -o enemy.o
-
-# projectile.o: projectile.cpp
-# 		g++ -c "projectile.cpp" - o projectile.o
-
-# summon.o: summon.cpp
-# 		g++ -c "summon.cpp" -o summon.o
+SRC_FILES = src/main.cpp src/Player.cpp src/Creature.cpp src/Rune.cpp src/Compiler.cpp
+OBJECTS = $(SRC_FILES:.cpp=.o)
+PROJECT = runes-of-cmd
+TARGET = $(PROJECT).exe
 
 
-#enemy.o projectile.o summon.o add these as needed
-game: main.o Player.o #enemy.o projectile.o summon.o
+all: $(TARGET)
+
+
+$(TARGET): $(OBJECTS)
 		@echo "** Building the game"
-		g++ -o game main.o Player.o $(LIBS)
+		$(TARGET): $(OBJECTS)
+	$(CXX) -o $@ $^ $(LIBS)
 
-run: game
-		./game
+run: $(TARGET)
+		./$(TARGET)

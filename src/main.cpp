@@ -29,28 +29,10 @@ int main(){
 
     Map map(windowX, windowY);
 
-    sf::Font font;
-    if(!font.openFromFile("ttf/Hack-Regular.ttf")){
-        std::cerr << "Failed to load font\n";
-        return -1;
-    }
-
-    sf::Text text(font);
-    text.setString("Hellow");
-    text.setCharacterSize(24); // in pixels, not points
-    text.setFillColor(sf::Color::Red);
-
-
+    
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,0);
     
-
-
-
-    // create the terminal thing
-    sf::RectangleShape terminal({windowX * 0.7f,windowY * 0.7f});
-    terminal.setOrigin(terminal.getGeometricCenter());
-    terminal.setPosition({windowX/2, windowY/2});
     
     // create the terminal open button
     sf::RectangleShape myButton({200.f, 100.f});

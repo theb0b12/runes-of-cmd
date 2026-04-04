@@ -2,6 +2,7 @@
 #include <SFML/Audio.hpp>
 
 #include "LockButton.hpp"
+#include "Player.hpp"
 #include "Map.hpp"
 #include <iostream>
 
@@ -18,7 +19,6 @@ int main(){
     float windowY = (float)windY; 
 
     Map map(windowX, windowY);
-
     sf::Font font;
     if(!font.openFromFile("ttf/Hack-Regular.ttf")){
         std::cerr << "Failed to load font\n";

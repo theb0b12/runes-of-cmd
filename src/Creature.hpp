@@ -3,13 +3,14 @@
 
 class creature {
 public:
-    creature();
+    creature(float, float, int);
     float getXpos();
     float getYpos();
+    int getFacing();
     int getHealth();
     void moveBy(float, float);
 private:
-    
+    int isFacing;
     float xPos;
     float yPos;
     int health;

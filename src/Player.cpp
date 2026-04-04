@@ -1,16 +1,4 @@
-class player {
-    public:
-        player();
-        float getXpos();
-        float getYpos();
-        int getFacing();
-        void moveBy(float x, float y);
-    private:
-        float xPos;
-        float yPos;
-        //1 is right, -1 is left, 2 is down, -2 is up
-        int isFacing;
-};
+#include "player.hpp"
 
 //constructor, there is no destructor or copy constructor as there is always only one player 
 player::player(){

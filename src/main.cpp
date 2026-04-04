@@ -3,63 +3,49 @@
 
 #include <iostream>
 
-void processButton(sf::RectangleShape *guiButton, sf::Vector2f mouse_position){
-    // state of button
-    bool isOver = false;
-    bool isPressedInside = false;
+void processButton(sf::RectangleShape *button, sf::Vector2f mousePos)
+{
+    static bool mousePressed = false;
+    static bool pressedInside = false;
 
-    // state of mouse
-    bool isMousePressed = false;
-    bool onMousePress   = false;
-    bool onMouseRelease = false;
+    bool isOver = button->getGlobalBounds().contains(mousePos);
 
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
-        if (!isMousePressed)
-            onMousePress = true;
-        isMousePressed = true;
+    bool justPressed = false;
+    bool justReleased = false;
+
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+    {
+        if (!mousePressed)
+            justPressed = true;
+
+        mousePressed = true;
     }
-    else{
-        if (isMousePressed)
-            onMouseRelease = true;
-        isMousePressed = false;
-    }
+    else
+    {
+        if (mousePressed)
+            justReleased = true;
 
-    // when mouse is over button
-    if (guiButton->getGlobalBounds().contains(mouse_position)){
-        // on mouse press
-        if (onMousePress){
-            std::cout << "Press\n";
-            // set pressed inside
-            isPressedInside = true;
-        }
-
-        // on mouse release
-        if (onMouseRelease and isPressedInside)
-            std::cout << "Release\n";
-
-        // when mouse is pressed
-        if (isMousePressed and isPressedInside)
-            guiButton->setFillColor(sf::Color::Yellow);
-        else
-            guiButton->setFillColor(sf::Color(0, 170, 255));
-
-        // set state
-        isOver = true;
-    }
-    else{
-        guiButton->setFillColor(sf::Color::White);
-
-        // on mouse leave
-        if (isOver)
-            std::cout << "Leave\n";
-
-        // reset state
-        isOver = false;
+        mousePressed = false;
     }
 
-    // reset pressed inside
-    if (not isMousePressed)
-        isPressedInside = false;
+    if (isOver && justPressed)
+    {
+        pressedInside = true;
+        std::cout << "Press\n";
+    }
+
+    if (justReleased && pressedInside)
+    {
+        std::cout << "Release\n";
+        pressedInside = false;
+    }
+
+    if (isOver && mousePressed)
+        button->setFillColor(sf::Color::Yellow);
+    else if (isOver)
+        button->setFillColor(sf::Color(0, 170, 255));
+    else
+        button->setFillColor(sf::Color::White);
 }
 
 int main(){

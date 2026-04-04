@@ -1,4 +1,4 @@
-#include "Rune.hpp"
+#include "../Rune.hpp"
 class Choice :public Rune{
     public:
         Choice(std::string);

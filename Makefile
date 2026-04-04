@@ -2,8 +2,9 @@ PROJECT = runes-of-cmd
 SRC_DIR = src
 RUNE_DIR = rune-types
 OBJ_DIR = obj
+BIN_DIR = bin
 
-ifeq ($(IS_WINDOWS),1)
+ifeq ($(shell echo "Windows"), "Windows")
     RM      := del /f /q
     RMDIR   := rd /s /q
     MKDIR   := mkdir
@@ -31,7 +32,7 @@ CXX = g++
 CPPVERSION = -std=c++17
 CXXFLAGS = -Wall -Wextra -g $(CPPVERSION)
 
-TARGET :=  $(BIN_DIR)$(DIR_SEP)$(PROJECT)$(EXE_EXT)
+TARGET =  $(BIN_DIR)$(DIR_SEP)$(PROJECT)$(EXE_EXT)
 
 # --- SFML Libraries ---
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio

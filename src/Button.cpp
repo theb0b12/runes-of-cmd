@@ -31,13 +31,14 @@ void Button::update(sf::Vector2f mousePos)
         pressedInside = true;
     }
 
-    if (justReleased && pressedInside){
-        pressedInside = false;
+    // toggle logic FIRST
+    if (justReleased && pressedInside && isOver && canToggle()){
+        toggle = !toggle;
     }
 
-    // toggle logic (now internal)
-    if (justReleased && pressedInside && isOver){
-        toggle = !toggle;
+    // THEN reset
+    if (justReleased && pressedInside){
+        pressedInside = false;
     }
 
     // visual feedback
@@ -52,10 +53,11 @@ bool Button::getToggle() const{
     return toggle;
 }
 
-
-
-
 // setters
 void Button::setToggle(bool value){
     toggle = value;
+}
+
+bool Button::canToggle() const {
+    return true;
 }

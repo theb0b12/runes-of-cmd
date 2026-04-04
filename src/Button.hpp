@@ -19,4 +19,5 @@ class Button{
         bool pressedInside;
 
         bool toggle;
+        virtual bool canToggle() const;
 };

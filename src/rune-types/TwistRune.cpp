@@ -1,6 +1,6 @@
 #include "TwistRune.hpp"
 
-Twist::Twist(Creature* h) : Rune("Twist", h){}
+Twist::Twist(Creature* h, Map& map) : Rune("Twist", h, map){}
 
 int Twist::activate(std::vector<Rune*> r){
     if(!r.empty()){

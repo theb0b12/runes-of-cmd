@@ -4,7 +4,7 @@
 
 class Twist :public Rune{
     public:
-        Twist(Creature* h); 
+        Twist(Creature* h, Map& map); 
         int activate(std::vector<Rune*>) override; //override the pure virtual function from the base class
 };
 

@@ -1,6 +1,6 @@
 #include "WindRune.hpp"
 
-Wind::Wind(Creature* h) : Rune("Wind", h){}
+Wind::Wind(Creature* h, Map& map) : Rune("Wind", h, map){}
 
 int Wind::activate(std::vector<Rune*> r){
     if(!r.empty()){

@@ -19,4 +19,6 @@ protected:
 private:
     sf::Clock _flashClock;
     bool      _flashing = false;
+    sf::Color _originalColor;
+    
 };

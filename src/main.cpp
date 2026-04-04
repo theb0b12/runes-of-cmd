@@ -87,16 +87,13 @@ int main(){
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,1);
 
-    std::vector<int> runeIds = {1, 2, 5, 6, 7}; // whatever C1 has
+    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4}; // whatever C1 has
     std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
+
 
     Terminal terminal(c1Runes, &C1, map);
     terminal.setupTerminal(C1);
     
-    
-
-    // Terminal terminal;
-    // terminal.setupTerminal(C1);
     
     // create the terminal open button
     sf::RectangleShape myButton({200.f, 100.f});

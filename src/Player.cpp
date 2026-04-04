@@ -10,7 +10,6 @@ Player::Player(){
     
 }
 
-
 void Player::printPlayer(sf::RenderWindow& window){
     body.setPosition({xPos,yPos});
     window.draw(body);
@@ -40,7 +39,6 @@ void Player::moveBy(float x, float y, float dt){
     if (y > 0) isFacing = 2;
     else if (y < 0) isFacing = -2;
 }
-
 
 void Player::setSpeed(float speed){
     _speed = speed;

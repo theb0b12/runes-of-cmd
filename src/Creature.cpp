@@ -89,3 +89,8 @@ void Creature::attack(){
     //attack regardless of whether there is an enemy in front or not
     //to be implemented
 }
+
+
+int Creature::getId() const{
+    return id;
+}

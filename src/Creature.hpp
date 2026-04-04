@@ -18,6 +18,7 @@ public:
     void setFacing(int f) { isFacing = f; }
     void addRune(int);
     void drawCreature(sf::RenderWindow&, Map&);
+    int getId() const;
 private:
     std::vector <int> possibleRunes;
     sf::CircleShape body;

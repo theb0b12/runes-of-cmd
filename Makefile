@@ -44,7 +44,6 @@ OBJECTS = $(patsubst $(SRC_DIR)$(DIR_SEP)%.cpp,$(OBJ_DIR)$(DIR_SEP)%.o,$(SRC_FIL
 # --- Default rule ---
 all: $(TARGET)
 	@echo "** Building the game"
-	g++ -o $(TARGET) $(OBJECTS) $(LIBS)
 
 $(TARGET): $(OBJECTS)
 	$(CXX) $(OBJECTS) -o $@ $^ $(LIBS)

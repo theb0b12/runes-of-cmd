@@ -3,7 +3,10 @@
 
 #include <iostream>
 
-void processButton(sf::RectangleShape *button, sf::Vector2f mousePos)
+const int windowX = 1280;
+const int windowY = 720;
+
+void processToggleButton(sf::RectangleShape *button, sf::Vector2f mousePos, bool *toggle, bool *lock)
 {
     static bool mousePressed = false;
     static bool pressedInside = false;
@@ -36,16 +39,24 @@ void processButton(sf::RectangleShape *button, sf::Vector2f mousePos)
         pressedInside = false;
     }
 
-    if (isOver && mousePressed)
-        button->setFillColor(sf::Color::Yellow);
-    else if (isOver)
+    if (isOver && mousePressed && !*lock)
+        if(*toggle){
+            *toggle = false;
+        }
+        else{
+            *toggle = true;
+            *lock = true;
+        }
+    else if (isOver){
         button->setFillColor(sf::Color(0, 170, 255));
-    else
+    }
+    else{
         button->setFillColor(sf::Color::White);
+    }
 }
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode({1280, 720}), "Runes of CMD");
+    sf::RenderWindow window(sf::VideoMode({windowX, windowY}), "Runes of CMD");
 
 
     sf::Font font;
@@ -65,8 +76,15 @@ int main(){
     guiButton.setOrigin(guiButton.getGeometricCenter());
     guiButton.setPosition({400.f, 300.f});
 
-    
 
+    // create the terminal thing
+
+    sf::RectangleShape terminal({windowX*0.7, windowY*0.7});
+    terminal.setOrigin(terminal.getGeometricCenter());
+    terminal.setPosition({windowX/2, windowY/2});
+    
+    bool guiToggle = false;
+    bool guiLock = false;
     
     while(window.isOpen()){
         while(const std::optional event = window.pollEvent()){
@@ -77,11 +95,20 @@ int main(){
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
 
-        processButton(&guiButton, mouse_position);
+        processToggleButton(&guiButton, mouse_position, &guiToggle, &guiLock);
 
-        window.clear(); 
-        window.draw(guiButton);
-        // window.draw(text);
+        // displaying stuff
+        window.clear();
+        if (!guiToggle) {
+            window.draw(guiButton);
+        }
+        
+        if(guiToggle){
+            window.clear();
+            window.draw(terminal);
+        }
+
+
         window.display();
 
     }

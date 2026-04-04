@@ -1,28 +1,29 @@
 PROJECT = runes-of-cmd
 SRC_DIR = src
-RUNE_DIR = rune-types
+#RUNE_DIR = rune-types
 OBJ_DIR = obj
 BIN_DIR = bin
 
-ifeq ($(shell echo "Windows"), "Windows")
+#ifeq ($(shell echo "Windows"), "Windows")
     RM      := del /f /q
     RMDIR   := rd /s /q
     MKDIR   := mkdir
     CP      := copy /y
     EXE_EXT := .exe
-else
-    RM      := rm -f
-    RMDIR   := rm -rf
-    MKDIR   := mkdir -p
-    CP      := cp
-    EXE_EXT :=
-endif
+# else
+#     RM      := rm -f
+#     RMDIR   := rm -rf
+#     MKDIR   := mkdir -p
+#     CP      := cp
+#     DIR_SEP := /
+#     EXE_EXT :=
+# endif
 
 # ALL CPP IMPLEMENTATION FILES THAT MAKE UP THE PROJECT
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/$(RUNE_DIR)*.cpp)
+SRC_FILES = $(wildcard src/*.cpp) $(wildcard $(SRC_DIR)$(DIR_SEP)$(RUNE_DIR)$(DIR_SEP)*.cpp)
 
 # ALL HEADER FILES
-H_FILES = $(wildcard $(SRC_DIR)/*.h) $(wildcard $(SRC_DIR)/*.hpp)
+H_FILES = $(wildcard src/*.h) $(wildcard src/*.hpp)
 
 
 # --- Compiler Settings ---

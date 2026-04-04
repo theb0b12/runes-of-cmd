@@ -83,11 +83,12 @@ int main(){
     // clock instantiation
     sf::Clock clock;
 
-    Player player;
-    player.setSpeed(300);
+    
 
     Map map(windowX, windowY);
-
+    
+    Player player(map);
+    player.setSpeed(300);
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,1);
 
@@ -125,6 +126,25 @@ int main(){
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
             player.moveBy(-1,0, dt);
+        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
+            
+            switch (player.getFacing())
+            {
+            case 1:
+                map.selectTile(player.getXTile() + 1,player.getYTile());
+                break;
+            case 2:
+                map.selectTile(player.getXTile(),player.getYTile() + 1);
+                break;
+            case -1:
+                map.selectTile(player.getXTile() - 1,player.getYTile());
+                break;
+            case -2:
+                map.selectTile(player.getXTile(),player.getYTile() - 1);
+            default:
+                break;
+            }
         }
         // mouse position
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);

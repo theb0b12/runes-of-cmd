@@ -13,8 +13,12 @@ public:
     float getTileHeight();
     int getXTiles();
     int getYTiles();
+    void selectTile(int,int);
     int occupied[12][6];
-private:
+    int selectedX;
+    int selectedY;
+    private:
+
     float width;
     float tileWidth;
     float height;

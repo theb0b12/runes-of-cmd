@@ -3,20 +3,26 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include "Map.hpp"
 
 class Player {
     public:
-        Player();
+        Player(Map&);
         float getXpos();
         float getYpos();
+        int getXTile();
+        int getYTile();
         void printPlayer(sf::RenderWindow&);
         int getFacing();
         void moveBy(float, float, float);
 
         void setSpeed(float);
     private:
+        Map& map;
         float xPos;
+        int xTile;
         float yPos;
+        int yTile;
         int isFacing;
         sf::CircleShape body;
 

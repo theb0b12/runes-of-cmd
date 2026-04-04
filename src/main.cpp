@@ -2,7 +2,7 @@
 #include <SFML/Audio.hpp>
 
 #include "Button.hpp"
-
+#include "Map.hpp"
 #include <iostream>
 
 const int windowX = 1280;
@@ -11,8 +11,13 @@ const int windowY = 720;
 
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode({windowX, windowY}), "Runes of CMD");
+    sf::RenderWindow window(sf::VideoMode({windowX, windowY}), "Runes of CMD",sf::Style::Default,sf::State::Fullscreen);
+    sf::Vector2u windowSize = window.getSize();
+    auto [windowX, windowY] = windowSize;
+    windowX = (float)windowX;
+    windowY = (float)windowY;
 
+    Map map(windowX, windowY);
 
     sf::Font font;
     if(!font.openFromFile("ttf/Hack-Regular.ttf")){
@@ -51,7 +56,7 @@ int main(){
 
         // displaying stuff
         window.clear();
-        
+        map.draw(window);
         if (guiButton.getToggle()) {
             window.draw(terminal);
         }

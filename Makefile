@@ -2,12 +2,12 @@ LIBS= -Lsrc/lib -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio
 
 all: game
 
-main.o: main.cpp
-		g++ -c "main.cpp" -o main.o 
+main.o: src/main.cpp
+		g++ -c "src/main.cpp" -o main.o 
 
 
-player.o: player.cpp
-		g++ -c "player.cpp" player.o
+player.o: src/Player.cpp
+		g++ -c "src/Player.cpp" Player.o
 
 # enemy.o: enemy.cpp
 # 		g++ -c "enemy.cpp" -o enemy.o
@@ -20,9 +20,9 @@ player.o: player.cpp
 
 
 #enemy.o projectile.o summon.o add these as needed
-game: main.o player.o #enemy.o projectile.o summon.o
+game: main.o Player.o #enemy.o projectile.o summon.o
 		@echo "** Building the game"
-		g++ -o game main.o player.o $(LIBS)
+		g++ -o game main.o Player.o $(LIBS)
 
 run: game.o
 		./game

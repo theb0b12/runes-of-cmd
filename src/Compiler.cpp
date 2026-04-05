@@ -95,6 +95,7 @@ std::vector<std::unique_ptr<Rune>> Compiler::transform(std::vector<int> vec, Cre
             case 5: output.push_back(std::make_unique<Wind>(holder, map));             break;
             case 6: output.push_back(std::make_unique<Twist>(holder, map));            break;
             case 7: output.push_back(std::make_unique<Violence>(holder, map));         break;
+            case 8: output.push_back(std::make_unique<Rune>("Escape", holder, map));      break;
         }
     }
     return output;

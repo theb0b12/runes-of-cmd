@@ -17,14 +17,7 @@ int Twist::activate(std::vector<Rune*> r)
         case -2: holder->setFacing(-1); break;
     }
 
-    // 🔥 ROTATE ALL GOOD CREATURES
-    for (Creature* c : Creature::getRegistry()) {
-        if (!c) continue;
-        if (c->getEnemy()) continue; // only GOOD creatures
-
-        // rotate animation
-        c->rotateAnim90();
-    }
+    holder->rotateAnim90();
 
     return 0;
 }

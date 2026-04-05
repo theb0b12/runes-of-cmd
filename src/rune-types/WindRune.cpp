@@ -10,8 +10,8 @@ int Wind::activate(std::vector<Rune*> r){
     int oldY = holder->getYpos();
 
     switch(facing){
-        case  1: holder->moveBy( 1,  0, map); break;
-        case -1: holder->moveBy(-1,  0, map); break;
+        case  1: holder->moveBy( -1,  0, map); break;
+        case -1: holder->moveBy(1,  0, map); break;
         case  2: holder->moveBy( 0, -1, map); break;
         case -2: holder->moveBy( 0,  1, map); break;
     }

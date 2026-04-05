@@ -168,6 +168,6 @@ void Creature::unregisterCreature(Creature* c) {
 
 void Creature::rotateAnim90()
 {
-    _rotation += 90.f;
+    _rotation -= 90.f;
 
 }

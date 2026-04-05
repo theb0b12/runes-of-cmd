@@ -14,7 +14,7 @@ public:
     int getHealth();
     int inFront(Map& map);
     bool getEnemy();
-    void moveBy(int, int);
+    void moveBy(int, int, Map&);
     void setFacing(int f) { isFacing = f; }
     void addRune(int);
     void drawCreature(sf::RenderWindow&, Map&);

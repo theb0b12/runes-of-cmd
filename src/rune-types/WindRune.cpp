@@ -10,15 +10,15 @@ int Wind::activate(std::vector<Rune*> r){
     int oldY = holder->getYpos();
 
     switch(facing){
-        case  1: holder->moveBy( 1,  0); break;
-        case -1: holder->moveBy(-1,  0); break;
-        case  2: holder->moveBy( 0, -1); break;
-        case -2: holder->moveBy( 0,  1); break;
+        case  1: holder->moveBy( 1,  0, map); break;
+        case -1: holder->moveBy(-1,  0, map); break;
+        case  2: holder->moveBy( 0, -1, map); break;
+        case -2: holder->moveBy( 0,  1, map); break;
     }
 
-    // hit a wall — reverse direction
-    if(holder->getXpos() == oldX && holder->getYpos() == oldY){
-        holder->setFacing(-facing);
-    }
+    // // hit a wall — reverse direction
+    // if(holder->getXpos() == oldX && holder->getYpos() == oldY){
+    //     holder->setFacing(-facing);
+    // }
     return 1;
 }

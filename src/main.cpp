@@ -70,7 +70,7 @@ int goodSpawned = 0;
 float waveTimer = 0.f;
 float spawnInterval = 5.f;   // seconds between spawns
 float resolveTimer = 0.f;
-const float RESOLVE_INTERVAL = 0.1f;
+const float RESOLVE_INTERVAL = 2.f;
 bool waveActive = false;
 
 int main(){
@@ -239,6 +239,7 @@ int main(){
 
             if(enemiesSpawned < targetEnemies){
                 if(createCreature(true, map)){
+                    enemiesSpawned++;
                     Creature* enemy = &creVec[creVec.size()-1];
                     Compiler::registerCreature(enemy);
                     Creature::registerCreature(enemy);

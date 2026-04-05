@@ -1,5 +1,6 @@
 #include "Creature.hpp"
 
+
 //constructor
 Creature::Creature(int x, int y, int hp, bool enemy, int count){
     xPos = x;

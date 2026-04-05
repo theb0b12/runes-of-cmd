@@ -4,10 +4,11 @@
 std::vector<std::vector<int>*> Compiler::tempArr;
 std::vector<Creature*>         Compiler::crePtrArr;
 int                            Compiler::step = 0;
+Map* Compiler::areamap = nullptr;
 
 
 void Compiler::initiallize(Map& m){
-    areamap = m;
+    areamap = &m;
     step = 0;
     crePtrArr.clear();
     for(int i = 0; i < 12; i++){
@@ -154,7 +155,7 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
 
 void Compiler::resolve(){
     for(size_t i = 0; i < crePtrArr.size(); i++){
-        std::vector <Rune> tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], areamap);
+        std::vector<Rune> tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
         std::vector <Rune> subVec = std::vector <Rune>(tempRune.begin() + 1, tempRune.end());
         std::vector <Rune*> ptrVec;
         for(size_t i = 0; i < subVec.size(); i++){

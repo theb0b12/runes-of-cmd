@@ -28,7 +28,7 @@ class Compiler{
     static std::vector <std::vector <int>*> tempArr;
     static std::vector <Creature*> crePtrArr;
     static int step;  
-    static Map& areamap;
+    static Map* areamap;
 
 };
 

@@ -12,6 +12,20 @@ Map::Map(float w, float h){
     selectedX = 5;
     selectedY = 3;
 
+    if (!_lightTile.loadFromFile("assets/grass_tile/light.png"))
+        std::cerr << "Failed to load light tile\n";
+    if (!_darkTile.loadFromFile("assets/grass_tile/dark.png"))
+        std::cerr << "Failed to load dark tile\n";
+    _tilesLoaded = true;
+
+    if (!_castleTexture.loadFromFile("assets/castle/castle.png"))
+        std::cerr << "Failed to load castle texture\n";
+    _castleSprite = sf::Sprite(_castleTexture);
+    float castleW = (width / 0.7f) * 0.3f;
+    _castleSprite->setScale({ castleW / _castleTexture.getSize().x,
+                            height  / _castleTexture.getSize().y });
+    _castleSprite->setPosition({ 0.f, 0.f });
+
 }
 
 // Getters
@@ -40,24 +54,21 @@ void Map::draw(sf::RenderWindow& window){
         for(int j = 0; j < 6; j++){
             sf::RectangleShape tile(sf::Vector2f(tileWidth, tileHeight));
             tile.setPosition({i * tileWidth + (width * 0.3f)/0.7f, (j - 3) * tileHeight + height/2});
-            if((i+j) % 2 == 0){
-               
-                tile.setFillColor(sf::Color(25, 100, 25));  
-            }else{
-               
-                tile.setFillColor(sf::Color(50, 175, 50));  
-            }
             
+            if(_tilesLoaded) {
+                tile.setTexture((i+j) % 2 == 0 ? &_lightTile : &_darkTile);
+            } else {
+                tile.setFillColor((i+j) % 2 == 0 ? sf::Color(25,100,25) : sf::Color(50,175,50));
+            }
+
             tile.setOutlineThickness(2);
             tile.setOutlineColor(sf::Color(50, 50, 50));
             window.draw(tile);
         }
     }
 
-    sf:: RectangleShape castle(sf::Vector2f{(width/0.7f) * 0.3f, height});
-    castle.setFillColor(sf::Color(100,100,100));
-    castle.setOutlineColor(sf::Color(50,50,50));
-    window.draw(castle);
+    if (_castleSprite) window.draw(*_castleSprite);
+
     sf::RectangleShape stands(sf::Vector2{width, (height - (tileHeight * 6))/6});
     for(int i = 0 ; i < 3; i++){
         stands.setFillColor(sf::Color(150/(i+1),75/(i+1),0));

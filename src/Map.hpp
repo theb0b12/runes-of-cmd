@@ -2,6 +2,7 @@
 #define MAP_HPP
 
 #include <SFML/Graphics.hpp>
+#include <optional>
 
 class Map{
 public:
@@ -19,6 +20,8 @@ public:
     int selectedY;
 
     void clearOccupied();
+
+    
     private:
 
     float width;
@@ -28,6 +31,12 @@ public:
     int xTiles;
     int yTiles;
 
+    sf::Texture _lightTile;
+    sf::Texture _darkTile;
+    bool _tilesLoaded = false;
+
+    sf::Texture              _castleTexture;
+    std::optional<sf::Sprite> _castleSprite;
 };
 
 #endif

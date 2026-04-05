@@ -85,11 +85,7 @@ int main(){
     Terminal terminal;
     Creature* selectedCreature = nullptr;
     
-    
-    // create the terminal open button
-    sf::RectangleShape myButton({200.f, 100.f});
-    myButton.setOrigin(myButton.getGeometricCenter());
-    myButton.setPosition({400.f, 300.f});
+
 
 
     // music mute button
@@ -119,7 +115,6 @@ int main(){
         btnY + 20.f  // half of button height (40/2)
     });
 
-    LockButton guiButton(&myButton);
 
     bool spacePressed = false;
 
@@ -136,7 +131,7 @@ int main(){
 
     creVec.reserve(100); // prevent reallocation invalidating Compiler pointers
     Compiler::initiallize(map);
-    
+
     while(window.isOpen()){
         while(const std::optional event = window.pollEvent()){
             if(event->is<sf::Event::Closed>())
@@ -210,7 +205,6 @@ int main(){
                             selectedCreature->getProgram(), selectedCreature, map);
                         terminal.loadProgram(savedRunes);
                     }
-                    guiButton.setToggle(true);
                 }
             }
         }
@@ -219,11 +213,8 @@ int main(){
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
 
-        bool wasToggled = guiButton.getToggle();
-        guiButton.update(mouse_position);
-        bool justToggled = !wasToggled && guiButton.getToggle();
 
-        if (guiButton.getToggle() && selectedCreature) {
+        if (selectedCreature) {
             terminal.update(mouse_position);
             if (terminal.isCompiled()) {
                 auto queue = terminal.getQueue();
@@ -233,12 +224,10 @@ int main(){
                 Compiler::createInstructions(runeVec);
                 selectedCreature->setProgram(Compiler::invTransform(runeVec));
                 terminal.resetCompile();
-                guiButton.setToggle(false);
                 selectedCreature = nullptr;
             }
         }
         if (terminal.isExitRequested()) {
-            guiButton.setToggle(false);
             terminal.resetExit();
             selectedCreature = nullptr;
         }
@@ -283,10 +272,9 @@ int main(){
 
         window.draw(activeAnim.getSprite());
 
-        if (guiButton.getToggle() && !justToggled && selectedCreature) {
+        if (selectedCreature) {
             terminal.drawTerminal(window);
         } else {
-            window.draw(myButton);
             window.draw(muteButtonShape);
             window.draw(muteLabel);
         }

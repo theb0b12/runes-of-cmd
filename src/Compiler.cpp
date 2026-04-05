@@ -131,12 +131,14 @@ void Compiler::resolve(){
     if(crePtrArr.empty()) return;
     for(size_t i = 0; i < crePtrArr.size(); i++){
         if(crePtrArr[i]->getProgram().empty()) continue;
-        auto tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
+        for(size_t j =0; j < crePtrArr[i]->instructionArr.size(); j++){
+        auto tempRune = transform(*(crePtrArr[i]->instructionArr[j]), crePtrArr[i], *areamap);
         if(tempRune.empty()) continue;
         std::vector<Rune*> pass;
-        for(size_t j = 1; j < tempRune.size(); j++)
-            pass.push_back(tempRune[j].get());
+        for(size_t k = 1; k < tempRune.size(); k++)
+            pass.push_back(tempRune[k].get());
         tempRune[0]->activate(pass);
+        }
     }
 }
 

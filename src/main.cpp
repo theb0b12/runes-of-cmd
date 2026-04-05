@@ -133,6 +133,10 @@ int main(){
     // CHANGE THIS BEFORE LAUNCH, FOR TESTING ONLY
     bgMusic.play();
 
+
+    creVec.reserve(100); // prevent reallocation invalidating Compiler pointers
+    Compiler::initiallize(map);
+    
     while(window.isOpen()){
         while(const std::optional event = window.pollEvent()){
             if(event->is<sf::Event::Closed>())
@@ -225,7 +229,7 @@ int main(){
                 auto queue = terminal.getQueue();
                 std::vector<Rune> runeVec;
                 for (auto* r : queue) runeVec.push_back(*r);
-                Compiler::initiallize(map);
+                // don't call initiallize here — it clears crePtrArr
                 Compiler::createInstructions(runeVec);
                 selectedCreature->setProgram(Compiler::invTransform(runeVec));
                 terminal.resetCompile();
@@ -270,7 +274,8 @@ int main(){
 
         map.draw(window);
 
-        Compiler::resolve();
+        if(Compiler::hasCreatures()) Compiler::resolve();
+
         for(int i = 0; i < creVec.size(); i++){
             creVec[i].drawCreature(window,map);
         }

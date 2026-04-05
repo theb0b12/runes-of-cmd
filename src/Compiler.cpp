@@ -157,9 +157,12 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
 
 
 void Compiler::resolve(){
-    std::cout << 1 << std::endl;
-    std::cout << (crePtrArr[0]->instructionArr[step])->size() << std::endl;
-    std::cout << 1 << std::endl;
+    // std::cout << "crePtrArr size: " << crePtrArr.size() << std::endl;
+    // std::cout << "step: " << step << std::endl;
+    if(crePtrArr.empty()) return;
+    // std::cout << "instructionArr size: " << crePtrArr[0]->instructionArr.size() << std::endl;
+    // std::cout << "instructionArr[step] ptr: " << crePtrArr[0]->instructionArr[step] << std::endl;
+    // std::cout << "instructionArr[step] size: " << crePtrArr[0]->instructionArr[step]->size() << std::endl;
     for(size_t i = 0; i < crePtrArr.size(); i++){
         std::cout << "inside" << std::endl;
         
@@ -178,3 +181,4 @@ void Compiler::resolve(){
     }
         
 }
+

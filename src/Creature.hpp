@@ -19,6 +19,7 @@ public:
     void addRune(int);
     void drawCreature(sf::RenderWindow&, Map&);
     int getId() const;
+    std::vector <std::vector <int>*> instructionArr;
 private:
     std::vector <int> possibleRunes;
     sf::CircleShape body;
@@ -28,7 +29,7 @@ private:
     int yPos;
     int health;
     int id;
-    std::vector <std::vector <int>*> instructionArr;
+    
 };
 
 #endif

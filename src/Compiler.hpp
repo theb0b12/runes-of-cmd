@@ -2,6 +2,7 @@
 #define COMPILER_HPP
 
 #include <SFML/Graphics.hpp>
+#include "Map.hpp"
 #include "Creature.hpp"
 #include "Rune.hpp"
 #include "rune-types/TwistRune.hpp"
@@ -14,7 +15,7 @@
 
 class Compiler{
     public:
-    static void initiallize();
+    static void initiallize(Map&);
     static void resolve();
     static void newCreature(Creature*);
     static std::vector <int> invTransform(std::vector <Rune>);
@@ -26,6 +27,7 @@ class Compiler{
     static std::vector <std::vector <int>*> tempArr;
     static std::vector <Creature*> crePtrArr;
     static int step;  
+    static Map& areamap;
 
 };
 

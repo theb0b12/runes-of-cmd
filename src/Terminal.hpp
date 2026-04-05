@@ -23,6 +23,8 @@ public:
     bool isExitRequested() const { return _exitRequested; }
     void resetExit() { _exitRequested = false; }
 
+    void loadProgram(std::vector<Rune> runes);
+
 private:
     // layout constants
     static constexpr float PANEL_W      = 1920 * 0.85f;

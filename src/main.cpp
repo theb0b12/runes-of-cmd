@@ -193,10 +193,16 @@ int main(){
 
                 if (found && found->getId() % 2 != 1) {
                     selectedCreature = found;
-                    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // add 8
-                    std::vector<Rune> runes = Compiler::transform(runeIds, selectedCreature, map);
-                    terminal = Terminal(runes, selectedCreature, map);
+                    // picker always gets the full rune set
+                    std::vector<Rune> pickerRunes = Compiler::transform({1, 2, 5, 6, 7, 4, 8}, selectedCreature, map);
+                    terminal = Terminal(pickerRunes, selectedCreature, map);
                     terminal.setupTerminal(*selectedCreature);
+                    // pre-load saved program separately
+                    if (!selectedCreature->getProgram().empty()) {
+                        std::vector<Rune> savedRunes = Compiler::transform(
+                            selectedCreature->getProgram(), selectedCreature, map);
+                        terminal.loadProgram(savedRunes);
+                    }
                     guiButton.setToggle(true);
                 }
             }
@@ -214,8 +220,14 @@ int main(){
             terminal.update(mouse_position);
             if (terminal.isCompiled()) {
                 auto queue = terminal.getQueue();
-                for (auto* r : queue) r->activate({});
+                std::vector<Rune> runeVec;
+                for (auto* r : queue) runeVec.push_back(*r);
+                Compiler::initiallize();
+                Compiler::createInstructions(runeVec);
+                selectedCreature->setProgram(Compiler::invTransform(runeVec));
                 terminal.resetCompile();
+                guiButton.setToggle(false);
+                selectedCreature = nullptr;
             }
         }
         if (terminal.isExitRequested()) {
@@ -259,7 +271,7 @@ int main(){
 
         window.draw(activeAnim.getSprite());
 
-        if (guiButton.getToggle() && !justToggled) {
+        if (guiButton.getToggle() && !justToggled && selectedCreature) {
             terminal.drawTerminal(window);
         } else {
             window.draw(myButton);

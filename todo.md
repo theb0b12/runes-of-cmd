@@ -14,15 +14,12 @@
 - Collison
     *w/ ghosts*
     with board
-- Runes
-    sprites
-    resolve/ activate
 - enemey
     spawning
     waves
-    *runes*
 - Win / lose state
 - art improvement
     stands
 - dev post finish
 - text tutorial
+

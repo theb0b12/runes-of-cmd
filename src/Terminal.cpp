@@ -7,7 +7,7 @@ sf::Vector2f Terminal::panelOrigin() const {
     return { (1920.f - PANEL_W) / 2.f, (1080.f - PANEL_H) / 2.f };
 }
 
-// constructors 
+// constructors
 
 Terminal::Terminal(std::vector<Rune> arr, Creature* c, Map& m)
     : runeArr(arr), creature(c), mapPtr(&m) {}
@@ -33,7 +33,7 @@ void Terminal::setupTerminal(Creature& c) {
     _titleText = sf::Text(_font);
     _titleText->setString(
         "  runes-of-cmd  //  unit:" +
-        std::to_string(c.getId() * BIG_PRIME%1000));
+        std::to_string(c.getId() * BIG_PRIME % 1000));
     _titleText->setCharacterSize(14);
     _titleText->setFillColor({ 120, 180, 120 });
     _titleText->setPosition({ o.x + PAD, o.y + PAD });
@@ -46,8 +46,8 @@ void Terminal::setupTerminal(Creature& c) {
     _editorBg.setFillColor({ 22, 22, 28, 255 });
 
     // line number gutters
-    float lineH    = editorH / MAX_LINES;
-    float gutterW  = 48.f;
+    float lineH   = editorH / MAX_LINES;
+    float gutterW = 48.f;
     _lineNumberBgs.clear();
     _lineNumbers.clear();
     for (int i = 0; i < MAX_LINES; i++) {
@@ -64,13 +64,6 @@ void Terminal::setupTerminal(Creature& c) {
         _lineNumbers.back()->setFillColor({ 80, 80, 100 });
         _lineNumbers.back()->setPosition({ o.x + 10.f, ly + lineH / 2.f - 8.f });
     }
-    // initialise empty lines
-    _lines.assign(MAX_LINES, {});
-    _cursorLine = 0;
-
-    
-
-
 
     // picker panel (bottom portion)
     float pickerH = PANEL_H * PICKER_FRAC;
@@ -81,14 +74,11 @@ void Terminal::setupTerminal(Creature& c) {
     _pickerBg.setOutlineColor({ 50, 50, 70 });
     _pickerBg.setOutlineThickness(1.f);
 
-    
     // picker cards
     _pickerCardShapes.clear();
     _pickerButtons.clear();
     _pickerLabels.clear();
-
     _pickerCardShapes.reserve(runeArr.size());
-
 
     float cardStartX = o.x + PAD * 2;
     float cardY      = pickerY + PAD * 2;
@@ -106,23 +96,13 @@ void Terminal::setupTerminal(Creature& c) {
         _pickerCardShapes.push_back(card);
         _pickerButtons.push_back(std::make_unique<SimpleButton>(&_pickerCardShapes.back()));
 
-        bool isNullTerminator = (runeArr[i].getType() == "\n");
+        bool isNull = (runeArr[i].getType() == "\n");
         _pickerLabels.push_back(sf::Text(_font));
-        _pickerLabels.back()->setString(isNullTerminator ? "\\n" : runeArr[i].getType());
+        _pickerLabels.back()->setString(isNull ? "\\n" : runeArr[i].getType());
         _pickerLabels.back()->setCharacterSize(11);
-        _pickerLabels.back()->setFillColor(isNullTerminator ? sf::Color{ 180, 230, 255 } : sf::Color::White);
+        _pickerLabels.back()->setFillColor(isNull ? sf::Color{180, 230, 255} : sf::Color::White);
         _pickerLabels.back()->setPosition({ cx, cy + TILE + 2.f });
     }
-    _prevPickerState.assign(_pickerButtons.size(), false);
-
-    _prevPickerState.assign(_pickerButtons.size(), false);
-    _prevCompileState = false;
-    _prevExitState    = false;
-    _compiled         = false;
-    _exitRequested    = false;
-    _program.clear();
-    _lines.assign(MAX_LINES, {});
-    _cursorLine = 0;
 
     // compile button
     float btnW = 160.f, btnH = 40.f;
@@ -162,6 +142,16 @@ void Terminal::setupTerminal(Creature& c) {
         o.x + PANEL_W - exitW / 2.f - PAD,
         o.y + PAD + exitH / 2.f - 4.f
     });
+
+    // reset all state — must come after picker setup so sizes are known
+    _prevPickerState.assign(_pickerButtons.size(), false);
+    _prevCompileState = false;
+    _prevExitState    = false;
+    _compiled         = false;
+    _exitRequested    = false;
+    _program.clear();
+    _lines.assign(MAX_LINES, {});
+    _cursorLine = 0;
 }
 
 // rebuild editor tokens
@@ -171,15 +161,14 @@ void Terminal::rebuildEditor() {
     _tokenShapes.clear();
     _tokenButtons.clear();
     _prevTokenState.clear();
+    _tokenShapes.reserve(MAX_LINES * MAX_PER_LINE);
 
-    const sf::Vector2f o      = panelOrigin();
+    const sf::Vector2f o = panelOrigin();
     float editorH  = PANEL_H * EDITOR_FRAC;
     float lineH    = editorH / MAX_LINES;
     float gutterW  = 48.f;
     float tokenH   = lineH * 0.60f;
     float tokenPad = 6.f;
-
-    _tokenShapes.reserve(/* max possible tokens */MAX_LINES * MAX_PER_LINE);
 
     for (int li = 0; li < (int)_lines.size(); li++) {
         float ly     = o.y + HEADER_H + li * lineH;
@@ -187,13 +176,9 @@ void Terminal::rebuildEditor() {
         float tokenX = o.x + gutterW + tokenPad;
 
         for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
-            Rune* r     = _lines[li][ti];
-            for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
-                Rune* r = _lines[li][ti];
-                bool isNullTerminator = (r->getType() == "\n");
-            }
-            bool isNullTerminator = (r->getType() == "\n");
-            float tokenW = isNullTerminator ? tokenH : (TILE * 0.85f);
+            Rune* r           = _lines[li][ti];
+            bool  isNull      = (r->getType() == "\n");
+            float tokenW      = isNull ? tokenH : (TILE * 0.85f);
 
             sf::RectangleShape tok({ tokenW, tokenH });
             tok.setPosition({ tokenX, tokenY });
@@ -202,15 +187,8 @@ void Terminal::rebuildEditor() {
             tok.setOutlineThickness(1.f);
             _tokenShapes.push_back(tok);
             _tokenButtons.push_back(
-                std::make_unique<SimpleButton>(&_tokenShapes.back())
-            );
+                std::make_unique<SimpleButton>(&_tokenShapes.back()));
             _prevTokenState.push_back(false);
-
-            // _tokenLabels.push_back(sf::Text(_font));
-            // _tokenLabels.back()->setString(isWind ? u8"\u21b5" : r->getType().substr(0, 4));
-            // _tokenLabels.back()->setCharacterSize(10);
-            // _tokenLabels.back()->setFillColor(sf::Color::White);
-            // _tokenLabels.back()->setPosition({ tokenX + 3.f, tokenY + tokenH / 2.f - 7.f });
 
             tokenX += tokenW + tokenPad;
         }
@@ -239,19 +217,19 @@ void Terminal::update(sf::Vector2f mouse) {
     if (exitNow && !_prevExitState) _exitRequested = true;
     _prevExitState = exitNow;
 
-    // picker cards — rising edge on each
+    // picker cards — rising edge
     for (int i = 0; i < (int)_pickerButtons.size(); i++) {
         bool cur = _pickerButtons[i]->getToggle();
         if (cur != _prevPickerState[i]) {
             _prevPickerState[i] = cur;
-            Rune* r = &runeArr[i];
-            bool isNullTerminator = (r->getType() == "\n");
+            Rune* r    = &runeArr[i];
+            bool isNull = (r->getType() == "\n");
 
             if (_cursorLine < MAX_LINES) {
-                if (isNullTerminator) {
-                    // only allow one newline per line, and don't allow newline on last line
-                    bool alreadyHasNewline = !_lines[_cursorLine].empty() && 
-                                            _lines[_cursorLine].back()->getType() == "\n";
+                if (isNull) {
+                    // one newline per line max, not on last line
+                    bool alreadyHasNewline = !_lines[_cursorLine].empty() &&
+                                             _lines[_cursorLine].back()->getType() == "\n";
                     if (!alreadyHasNewline && _cursorLine < MAX_LINES - 1) {
                         _lines[_cursorLine].push_back(r);
                         _program.push_back(r);
@@ -269,12 +247,11 @@ void Terminal::update(sf::Vector2f mouse) {
         }
     }
 
-    // token removal — rising edge on each
+    // token removal — rising edge
     for (int i = 0; i < (int)_tokenButtons.size(); i++) {
         bool cur = _tokenButtons[i]->getToggle();
         if (cur != _prevTokenState[i]) {
             _prevTokenState[i] = cur;
-            // find line/col for this flat index and remove
             int idx = 0;
             for (int li = 0; li < (int)_lines.size(); li++) {
                 for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
@@ -286,7 +263,7 @@ void Terminal::update(sf::Vector2f mouse) {
                         if (flat < (int)_program.size())
                             _program.erase(_program.begin() + flat);
                         _lines[li].erase(_lines[li].begin() + ti);
-                        // recompute cursor
+                        // recompute cursor to last non-empty line
                         _cursorLine = 0;
                         for (int ll = 0; ll < MAX_LINES; ll++)
                             if (!_lines[ll].empty()) _cursorLine = ll;
@@ -303,7 +280,6 @@ void Terminal::update(sf::Vector2f mouse) {
     bool compileNow = _compileBtnWidget->getToggle();
     if (compileNow && !_prevCompileState && !_program.empty())
         _compiled = true;
-        
     _prevCompileState = compileNow;
 }
 
@@ -319,7 +295,7 @@ void Terminal::drawTerminal(sf::RenderWindow& window) {
     for (auto& num : _lineNumbers)   window.draw(*num);
 
     // line separators
-    const sf::Vector2f o  = panelOrigin();
+    const sf::Vector2f o = panelOrigin();
     float editorH = PANEL_H * EDITOR_FRAC;
     float lineH   = editorH / MAX_LINES;
     for (int i = 1; i < MAX_LINES; i++) {
@@ -351,21 +327,22 @@ void Terminal::drawTerminal(sf::RenderWindow& window) {
     window.draw(_exitBtnShape);
     window.draw(*_exitLabel);
 
-    // title drawn last so it's on top
+    // title on top
     window.draw(*_titleText);
 }
+
+// load saved program into editor
 
 void Terminal::loadProgram(std::vector<Rune> runes) {
     _lines.assign(MAX_LINES, {});
     _cursorLine = 0;
     _program.clear();
 
-    // find matching runes in runeArr by type to get stable pointers
     for (auto& r : runes) {
         if (_cursorLine >= MAX_LINES) break;
         bool isNull = (r.getType() == "\n");
+
         if (isNull) {
-            // find \n in runeArr
             for (auto& pr : runeArr) {
                 if (pr.getType() == "\n") {
                     if ((int)_lines[_cursorLine].size() < MAX_PER_LINE)
@@ -376,7 +353,6 @@ void Terminal::loadProgram(std::vector<Rune> runes) {
                 }
             }
         } else {
-            // find matching type in runeArr
             for (auto& pr : runeArr) {
                 if (pr.getType() == r.getType()) {
                     if ((int)_lines[_cursorLine].size() < 3) {

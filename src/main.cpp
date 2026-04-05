@@ -20,7 +20,6 @@
 #include "Animation.hpp"
 
 
-
 const int windX = 1920;
 const int windY = 1080;
 
@@ -103,9 +102,9 @@ int main(){
     playerIdle.setScale({ 2.5f, 2.5f });
 
     //Creature Feature featuring the creature
-    Creature C1(3,4,-2,true,1);
+    Creature C1(3,4,-2,true,2);
 
-    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // whatever C1 has
+    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8};
     std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
 
 
@@ -121,8 +120,6 @@ int main(){
 
     // music mute button
     sf::RectangleShape muteButtonShape({80.f, 40.f});
-    muteButtonShape.setOrigin(muteButtonShape.getGeometricCenter());
-    muteButtonShape.setPosition({700.f, 300.f});
     SimpleButton muteButton(&muteButtonShape);
     bool muted = false;
 
@@ -134,7 +131,19 @@ int main(){
     muteLabel.setFillColor(sf::Color::Black);
     auto mlb = muteLabel.getLocalBounds();
     muteLabel.setOrigin({mlb.size.x / 2.f, mlb.size.y / 2.f});
-    muteLabel.setPosition({700.f, 300.f});
+
+
+    // position the button
+    float btnX = (1920.f * 0.3f) - 90.f; // 10px from right edge of castle
+    float btnY = 10.f;
+    muteButtonShape.setOrigin({0.f, 0.f}); // remove origin offset to make math easier
+    muteButtonShape.setPosition({ btnX, btnY });
+
+    // center label on button
+    muteLabel.setPosition({
+        btnX + 40.f, // half of button width (80/2)
+        btnY + 20.f  // half of button height (40/2)
+    });
 
     LockButton guiButton(&myButton);
 
@@ -146,7 +155,8 @@ int main(){
         std::cerr << "Failed to load music\n";
     }
     bgMusic.setLooping(true);
-    bgMusic.setVolume(20.f);
+    bgMusic.setVolume(0.f);
+    // CHANGE THIS BEFORE LAUNCH, FOR TESTING ONLY
     bgMusic.play();
 
     while(window.isOpen()){
@@ -212,7 +222,7 @@ int main(){
 
                 if (found && found->getId() % 2 != 1) {
                     selectedCreature = found;
-                    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4};
+                    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // add 8
                     std::vector<Rune> runes = transform(runeIds, selectedCreature, map);
                     terminal = Terminal(runes, selectedCreature, map);
                     terminal.setupTerminal(*selectedCreature);
@@ -252,10 +262,15 @@ int main(){
         }
         
         muteButton.update(mouse_position);
-        bool muteNow = muteButton.getToggle();
-        if (muteNow != muted) {
-            muted = muteNow;
-            bgMusic.setVolume(muted ? 0.f : 50.f);
+        bool mutedNow = muteButton.getToggle();
+        if (mutedNow != muted) {
+            muted = mutedNow;
+            bgMusic.setVolume(muted ? 0.f : 20.f);
+            muteLabel.setString(muted ? "UNMUTE" : "MUTE");
+            // re-center label after string change
+            auto lb = muteLabel.getLocalBounds();
+            muteLabel.setOrigin({ lb.size.x / 2.f, lb.size.y / 2.f });
+            muteLabel.setPosition({ btnX + 40.f, btnY + 20.f });
         }
 
         // displaying stuff
@@ -278,8 +293,9 @@ int main(){
         } else {
             window.draw(myButton);
             window.draw(muteButtonShape);
+            window.draw(muteLabel);
         }
-        window.draw(muteLabel);
+        
 
         window.display();
 

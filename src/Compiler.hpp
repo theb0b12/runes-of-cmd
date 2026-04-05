@@ -23,6 +23,7 @@ class Compiler{
     static std::vector <Rune> transform(std::vector<std::vector<int>*>, Creature*, Map&);
     static std::vector <std::vector <int>*> createInstructions(std::vector <Rune>);
     
+    static bool hasCreatures() { return !crePtrArr.empty(); }
     
     private:
     static std::vector <std::vector <int>*> tempArr;

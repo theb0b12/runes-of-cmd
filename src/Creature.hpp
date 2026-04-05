@@ -24,7 +24,7 @@ public:
     void setProgram(std::vector<int> prog) { program = prog; }
     std::vector<int> getProgram() const { return program; }
 
-    std::vector <std::vector <int>*> instructionArr;
+    std::vector<std::vector<int>*> instructionArr;
 private:
     std::vector <int> possibleRunes;
     sf::CircleShape body;

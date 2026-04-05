@@ -30,6 +30,9 @@ class Player {
         sf::CircleShape body;
 
         float _speed = 10.f;
+
+        static constexpr float SPRITE_HALF_W = 120.f; // 96 * 2.5 / 2
+        static constexpr float SPRITE_HALF_H = 105.f; // 84 * 2.5 / 2
 };
 
 

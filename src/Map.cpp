@@ -34,7 +34,7 @@ int Map::getYTiles(){
     return yTiles;
 }
 
-//Draw the map
+// Draw the map
 void Map::draw(sf::RenderWindow& window){
     for(int i = 0; i < 12; i++){
         for(int j = 0; j < 6; j++){
@@ -48,9 +48,6 @@ void Map::draw(sf::RenderWindow& window){
                 tile.setFillColor(sf::Color(50, 175, 50));  
             }
             
-            if(i == selectedX && j == selectedY ){
-                tile.setFillColor(sf::Color::Yellow);
-            }
             tile.setOutlineThickness(2);
             tile.setOutlineColor(sf::Color(50, 50, 50));
             window.draw(tile);
@@ -75,4 +72,10 @@ void Map::draw(sf::RenderWindow& window){
 void Map::selectTile(int x, int y){
     selectedX = x;
     selectedY = y;
+}
+
+void Map::clearOccupied() {
+    for (int i = 0; i < 12; i++)
+        for (int j = 0; j < 6; j++)
+            occupied[i][j] = 0;
 }

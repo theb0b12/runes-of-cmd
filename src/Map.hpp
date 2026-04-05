@@ -17,6 +17,8 @@ public:
     int occupied[12][6];
     int selectedX;
     int selectedY;
+
+    void clearOccupied();
     private:
 
     float width;

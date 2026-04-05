@@ -4,6 +4,7 @@
 #include <cmath>
 #include <random>
 #include <iostream>
+#include <algorithm>
 
 #include "Rune.hpp"
 #include "rune-types/TwistRune.hpp"
@@ -35,8 +36,10 @@ void createCreature(bool enemy, Map& map){
     int yheight = intDist(mt);
     if(enemy && map.occupied[11][yheight] == 0){
         creVec.push_back(Creature(11,yheight, 3,  true, numBad * 2 + 1));
+        numBad++;
     } else if (map.occupied[0][yheight] == 0) {
         creVec.push_back(Creature(0,yheight, 3, false, numGood * 2 + 2));
+        numGood++;
     }
 }
 
@@ -75,6 +78,7 @@ std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
 
 int spawnTimer = 800;
 
+
 int main(){
     sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default/*,sf::State::Fullscreen*/);
     sf::Vector2u windowSize = window.getSize();
@@ -105,8 +109,8 @@ int main(){
     std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
 
 
-    Terminal terminal(c1Runes, &C1, map);
-    terminal.setupTerminal(C1);
+    Terminal terminal;
+    Creature* selectedCreature = nullptr;
     
     
     // create the terminal open button
@@ -114,7 +118,27 @@ int main(){
     myButton.setOrigin(myButton.getGeometricCenter());
     myButton.setPosition({400.f, 300.f});
 
+
+    // music mute button
+    sf::RectangleShape muteButtonShape({80.f, 40.f});
+    muteButtonShape.setOrigin(muteButtonShape.getGeometricCenter());
+    muteButtonShape.setPosition({700.f, 300.f});
+    SimpleButton muteButton(&muteButtonShape);
+    bool muted = false;
+
+    sf::Font uiFont;
+    uiFont.openFromFile("ttf/Hack-Regular.ttf");
+    sf::Text muteLabel(uiFont);
+    muteLabel.setString("MUTE");
+    muteLabel.setCharacterSize(14);
+    muteLabel.setFillColor(sf::Color::Black);
+    auto mlb = muteLabel.getLocalBounds();
+    muteLabel.setOrigin({mlb.size.x / 2.f, mlb.size.y / 2.f});
+    muteLabel.setPosition({700.f, 300.f});
+
     LockButton guiButton(&myButton);
+
+    bool spacePressed = false;
 
     // music stuff
     sf::Music bgMusic;
@@ -122,7 +146,7 @@ int main(){
         std::cerr << "Failed to load music\n";
     }
     bgMusic.setLooping(true);
-    bgMusic.setVolume(50.f);
+    bgMusic.setVolume(20.f);
     bgMusic.play();
 
     while(window.isOpen()){
@@ -154,25 +178,49 @@ int main(){
         activeAnim.update(dt);
         activeAnim.setPosition(player.getPosition());
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
-            
-            switch (player.getFacing())
-            {
-            case 1:
-                map.selectTile(player.getXTile() + 1,player.getYTile());
-                break;
-            case 2:
-                map.selectTile(player.getXTile(),player.getYTile() + 1);
-                break;
-            case -1:
-                map.selectTile(player.getXTile() - 1,player.getYTile());
-                break;
-            case -2:
-                map.selectTile(player.getXTile(),player.getYTile() - 1);
-            default:
-                break;
+        bool spacePressedNow = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+        bool spaceJustPressed = spacePressedNow && !spacePressed;
+        spacePressed = spacePressedNow;
+
+        if (spaceJustPressed) {
+            int targetX = player.getXTile();
+            int targetY = player.getYTile();
+
+            switch (player.getFacing()) {
+                case  1: targetX += 1; break;
+                case -1: targetX -= 1; break;
+                case  2: targetY += 1; break;
+                case -2: targetY -= 1; break;
+            }
+
+            targetX = std::clamp(targetX, 0, 11);
+            targetY = std::clamp(targetY, 0, 5);
+
+            int occupantId = map.occupied[targetX][targetY];
+            if (occupantId != 0) {
+                Creature* found = nullptr;
+                if (C1.getId() == occupantId) {
+                    found = &C1;
+                } else {
+                    for (auto& cr : creVec) {
+                        if (cr.getId() == occupantId) {
+                            found = &cr;
+                            break;
+                        }
+                    }
+                }
+
+                if (found && found->getId() % 2 != 1) {
+                    selectedCreature = found;
+                    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4};
+                    std::vector<Rune> runes = transform(runeIds, selectedCreature, map);
+                    terminal = Terminal(runes, selectedCreature, map);
+                    terminal.setupTerminal(*selectedCreature);
+                    guiButton.setToggle(true);
+                }
             }
         }
+
         // mouse position
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
@@ -181,23 +229,18 @@ int main(){
         guiButton.update(mouse_position);
         bool justToggled = !wasToggled && guiButton.getToggle();
 
-        if (guiButton.getToggle()) {
+        if (guiButton.getToggle() && selectedCreature) {
             terminal.update(mouse_position);
             if (terminal.isCompiled()) {
                 auto queue = terminal.getQueue();
-                // TODO: iterate queue and call activate() on each rune
                 for (auto* r : queue) r->activate({});
                 terminal.resetCompile();
-                // or 
-                // if (terminal.isCompiled()) {
-                //     compiler.run(terminal.getQueue());
-                //     terminal.resetCompile();
-                // }
             }
         }
         if (terminal.isExitRequested()) {
             guiButton.setToggle(false);
             terminal.resetExit();
+            selectedCreature = nullptr;
         }
 
         //spawn tests
@@ -208,8 +251,16 @@ int main(){
             spawnTimer = 100;
         }
         
+        muteButton.update(mouse_position);
+        bool muteNow = muteButton.getToggle();
+        if (muteNow != muted) {
+            muted = muteNow;
+            bgMusic.setVolume(muted ? 0.f : 50.f);
+        }
 
         // displaying stuff
+        map.clearOccupied();
+
         window.clear();
 
         map.draw(window);
@@ -226,6 +277,7 @@ int main(){
             terminal.drawTerminal(window);
         } else {
             window.draw(myButton);
+            window.draw(muteButtonShape);
         }
 
         window.display();

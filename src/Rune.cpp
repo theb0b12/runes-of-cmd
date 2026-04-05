@@ -1,4 +1,5 @@
 #include "Rune.hpp"
+#include <iostream>
 
 // distinct, readable colors for each rune type
 static sf::Color colorForType(const std::string& t) {
@@ -23,6 +24,7 @@ Rune::Rune(std::string t, Creature* h, Map& m)
 
 int Rune::activate(std::vector<Rune*> r) {
     // base class — overridden by derived classes
+    std::cout << "basic rune" << std::endl;
     return 0;
 }
 

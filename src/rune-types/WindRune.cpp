@@ -3,6 +3,7 @@
 Wind::Wind(Creature* h, Map& map) : Rune("Wind", h, map){}
 
 int Wind::activate(std::vector<Rune*> r){
+    std::cout << "wind" << std::endl;
     if(!r.empty()){
         //if any follow-up runes are provided, return error code since Wind should not have any follow-up runes
         return -1;
@@ -24,5 +25,5 @@ int Wind::activate(std::vector<Rune*> r){
                 holder->moveBy(0, 1.0); //move down
                 break;
         }
-    return 0;
+    return 1;
 }

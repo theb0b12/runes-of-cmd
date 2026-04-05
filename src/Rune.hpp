@@ -1,6 +1,7 @@
 #ifndef RUNE_HPP
 #define RUNE_HPP
 #include <string>
+#include <iostream>
 #include <vector>
 #include "Creature.hpp"
 #include "Map.hpp"

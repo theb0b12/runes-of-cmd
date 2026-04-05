@@ -263,7 +263,7 @@ int main(){
 
         map.draw(window);
 
-        if(Compiler::hasCreatures()) Compiler::resolve();
+        if(Compiler::hasCreatures() && spawnTimer < 1) Compiler::resolve();
 
         for(int i = 0; i < creVec.size(); i++){
             creVec[i].drawCreature(window,map);

@@ -75,8 +75,6 @@ int main(){
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,2);
 
-    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // whatever C1 has
-    std::vector<Rune> c1Runes = Compiler::transform(runeIds, &C1, map);
     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8};
     std::vector<Rune> c1Runes = Compiler::transform(runeIds, &C1, map);
 
@@ -195,8 +193,6 @@ int main(){
 
                 if (found && found->getId() % 2 != 1) {
                     selectedCreature = found;
-                    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4};
-                    std::vector<Rune> runes = Compiler::transform(runeIds, selectedCreature, map);
                     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // add 8
                     std::vector<Rune> runes = Compiler::transform(runeIds, selectedCreature, map);
                     terminal = Terminal(runes, selectedCreature, map);

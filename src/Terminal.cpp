@@ -1,5 +1,7 @@
 #include "Terminal.hpp"
 #include <iostream>
+#include "Compiler.hpp"
+
 #include <cmath>
 
 // helpers
@@ -300,6 +302,7 @@ void Terminal::update(sf::Vector2f mouse) {
     bool compileNow = _compileBtnWidget->getToggle();
     if (compileNow && !_prevCompileState && !_program.empty())
         _compiled = true;
+        
     _prevCompileState = compileNow;
 }
 

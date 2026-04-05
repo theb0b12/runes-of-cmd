@@ -17,6 +17,9 @@ class Player {
         void moveBy(float, float, float);
 
         void setSpeed(float);
+
+        sf::Vector2f getPosition() const;
+        
     private:
         Map& map;
         float xPos;

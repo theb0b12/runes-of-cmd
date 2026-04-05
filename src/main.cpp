@@ -1,7 +1,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+
 #include <cmath>
 #include <random>
+#include <iostream>
 
 #include "Rune.hpp"
 #include "rune-types/TwistRune.hpp"
@@ -14,7 +16,9 @@
 #include "Player.hpp"
 #include "Map.hpp"
 #include "Terminal.hpp"
-#include <iostream>
+#include "Animation.hpp"
+
+
 
 const int windX = 1920;
 const int windY = 1080;
@@ -69,8 +73,8 @@ std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
     return output;
 }
 
-
 int spawnTimer = 800;
+
 int main(){
     sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default/*,sf::State::Fullscreen*/);
     sf::Vector2u windowSize = window.getSize();
@@ -83,12 +87,17 @@ int main(){
     // clock instantiation
     sf::Clock clock;
 
-    
 
     Map map(windowX, windowY);
     
     Player player(map);
     player.setSpeed(300);
+
+    Animation playerWalk("assets/player", 8.f, true);
+    Animation playerIdle("assets/player_idle", 6.f, true);
+    playerWalk.setScale({ 2.5f, 2.5f });
+    playerIdle.setScale({ 2.5f, 2.5f });
+
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,1);
 
@@ -106,7 +115,16 @@ int main(){
     myButton.setPosition({400.f, 300.f});
 
     LockButton guiButton(&myButton);
-    
+
+    // music stuff
+    sf::Music bgMusic;
+    if (!bgMusic.openFromFile("assets/music/bluebossav1-blasterhacks2026.ogg")) {
+        std::cerr << "Failed to load music\n";
+    }
+    bgMusic.setLooping(true);
+    bgMusic.setVolume(50.f);
+    bgMusic.play();
+
     while(window.isOpen()){
         while(const std::optional event = window.pollEvent()){
             if(event->is<sf::Event::Closed>())
@@ -115,18 +133,27 @@ int main(){
         float dt = clock.restart().asSeconds();
 
         // player controls
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){
-            player.moveBy(0,1, dt);
+        std::string dir = playerWalk.getCurrentDirection();
+        bool moving = false;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+            player.moveBy(0, 1, dt);  dir = "down";  moving = true;
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){
-            player.moveBy(0,-1, dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+            player.moveBy(0, -1, dt); dir = "up";    moving = true;
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
-            player.moveBy(1,0, dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+            player.moveBy(1, 0, dt);  dir = "right"; moving = true;
         }
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
-            player.moveBy(-1,0, dt);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            player.moveBy(-1, 0, dt); dir = "left";  moving = true;
         }
+
+        Animation& activeAnim = moving ? playerWalk : playerIdle;
+        activeAnim.setDirection(dir, moving ? "assets/player" : "assets/player_idle");
+        activeAnim.update(dt);
+        activeAnim.setPosition(player.getPosition());
+
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)){
             
             switch (player.getFacing())
@@ -173,8 +200,6 @@ int main(){
             terminal.resetExit();
         }
 
-
-
         //spawn tests
         spawnTimer--;
         if(spawnTimer < 0){
@@ -195,7 +220,7 @@ int main(){
         }
         C1.drawCreature(window,map);
 
-        player.printPlayer(window);
+        window.draw(activeAnim.getSprite());
 
         if (guiButton.getToggle() && !justToggled) {
             terminal.drawTerminal(window);

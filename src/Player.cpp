@@ -85,3 +85,7 @@ void Player::moveBy(float x, float y, float dt){
 void Player::setSpeed(float speed){
     _speed = speed;
 }
+
+sf::Vector2f Player::getPosition() const {
+    return { xPos, yPos };
+}

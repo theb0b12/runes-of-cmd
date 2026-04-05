@@ -70,10 +70,10 @@ int main(){
     Player player(map);
     player.setSpeed(300);
 
-    Animation playerWalk("assets/player", 8.f, true);
-    Animation playerIdle("assets/player_idle", 6.f, true);
-    playerWalk.setScale({ 2.5f, 2.5f });
-    playerIdle.setScale({ 2.5f, 2.5f });
+    Animation playerWalk("assets/new_player", 8.f, true);
+    Animation playerIdle("assets/new_player_idle", 4.f, true); // slower for idle
+    playerWalk.setScale({ 9.f, 9.f });
+    playerIdle.setScale({ 9.f, 9.f });
 
     //Creature Feature featuring the creature
     Creature C1(3,4,-2,true,2);
@@ -158,7 +158,7 @@ int main(){
         }
 
         Animation& activeAnim = moving ? playerWalk : playerIdle;
-        activeAnim.setDirection(dir, moving ? "assets/player" : "assets/player_idle");
+        activeAnim.setDirection(dir, moving ? "assets/new_player" : "assets/new_player_idle");
         activeAnim.update(dt);
         activeAnim.setPosition(player.getPosition());
 

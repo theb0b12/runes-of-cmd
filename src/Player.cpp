@@ -28,8 +28,8 @@ void Player::printPlayer(sf::RenderWindow& window){
             default:
                 break;
             }
-        xTile = (xPos + 120 - (0.3f*map.getWidth())/0.7f) / map.getTileWidth();
-        yTile = (yPos + 105 - ((map.getHeight() - (map.getTileHeight() * 6))/6) * 3) / map.getTileHeight();
+        xTile = (xPos + 36 - (0.3f*map.getWidth())/0.7f) / map.getTileWidth();
+        yTile = (yPos + 36 - ((map.getHeight() - (map.getTileHeight() * 6))/6) * 3) / map.getTileHeight();
     
     }
     
@@ -78,8 +78,8 @@ void Player::moveBy(float x, float y, float dt){
     if (y > 0) isFacing = 2;
     else if (y < 0) isFacing = -2;
 
-    xTile = (xPos + 120 - (0.3f*map.getWidth())/0.7f) / map.getTileWidth();
-    yTile = (yPos + 105 - ((map.getHeight() - (map.getTileHeight() * 6))/6) * 3) / map.getTileHeight();
+    xTile = (xPos + 36 - (0.3f*map.getWidth())/0.7f) / map.getTileWidth();
+    yTile = (yPos + 36 - ((map.getHeight() - (map.getTileHeight() * 6))/6) * 3) / map.getTileHeight();
 }
 
 void Player::setSpeed(float speed){

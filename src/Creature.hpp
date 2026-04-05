@@ -2,6 +2,7 @@
 #define CREATURE_HPP
 
 #include "Map.hpp"
+#include "Animation.hpp"
 #include <vector>
 
 class Creature {
@@ -35,6 +36,8 @@ private:
     int id;
 
     std::vector<int> program;
+
+    Animation _anim;
 };
 
 #endif

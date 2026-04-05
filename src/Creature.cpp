@@ -24,11 +24,13 @@ Creature::Creature(int x, int y, int hp, bool enemy, int count){
     } else {
         body.setFillColor(sf::Color::Red);
     }
-    for(int i = 0; i < 12; i++){
-        std::vector <int> tempvec;
-        tempvec.push_back(1);
-        instructionArr.push_back(&tempvec);
+
+    if(isEnemy) {
+        _anim = Animation("assets/badGuy", 4.f);
+    } else {
+        _anim = Animation("assets/goodGuy", 4.f);
     }
+    _anim.setScale({ 9.f, 9.f });
 }
 
 //getters
@@ -65,11 +67,12 @@ void Creature::addRune(int r){
 
 
 void Creature::drawCreature(sf::RenderWindow& window, Map& map){
-    //same position as map tiles
-    body.setRadius(map.getTileHeight()/2);
-    body.setPosition({xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f, (yPos - 3) * map.getTileHeight() + map.getHeight()/2});
+    float px = xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f;
+    float py = (yPos - 3) * map.getTileHeight() + map.getHeight()/2;
+    _anim.setPosition({ px, py });
+    _anim.update(0.016f); // fixed timestep ~60fps
+    window.draw(_anim.getSprite());
     map.occupied[xPos][yPos] = id;
-    window.draw(body);
 }
 
 //Check if there is an enemy in front of the creature, returns id of creature if found and 0 if empty

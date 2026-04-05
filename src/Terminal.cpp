@@ -1,9 +1,6 @@
 #include "Terminal.hpp"
 #include <iostream>
 
-
-#include <cmath>
-
 // helpers
 
 sf::Vector2f Terminal::panelOrigin() const {

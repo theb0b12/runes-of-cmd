@@ -21,6 +21,22 @@
 #include "Compiler.hpp"
 
 
+std::vector<Rune> transform(std::vector<int> vec, Creature* holder, Map& map){
+    std::vector<Rune> output;
+    for(size_t i = 0; i < vec.size(); i++){
+        switch(vec[i]){
+            case 1: output.push_back(Sight(holder, map));            break;
+            case 2: output.push_back(Choice(holder, map));           break;
+            case 3: output.push_back(Rune("Harmony", holder, map));  break;
+            case 4: output.push_back(Rune("Discord", holder, map));  break;
+            case 5: output.push_back(Wind(holder, map));             break;
+            case 6: output.push_back(Twist(holder, map));            break;
+            case 7: output.push_back(Violence(holder, map));         break;
+            case 8: output.push_back(Rune("\n", holder, map));       break;
+        }
+    }
+    return output;
+}
 
 const int windX = 1920;
 const int windY = 1080;
@@ -79,7 +95,7 @@ int main(){
     Creature C1(3,4,-2,true,2);
 
     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8};
-    std::vector<Rune> c1Runes = Compiler::transform(runeIds, &C1, map);
+    std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
 
 
     Terminal terminal;
@@ -195,13 +211,13 @@ int main(){
 
                 if (found && found->getId() % 2 != 1) {
                     selectedCreature = found;
-                    // picker always gets the full rune set
-                    std::vector<Rune> pickerRunes = Compiler::transform({1, 2, 5, 6, 7, 4, 8}, selectedCreature, map);
+                    // picker always gets the full rune set — use free transform, not Compiler::transform
+                    std::vector<Rune> pickerRunes = transform({1, 2, 5, 6, 7, 4, 8}, selectedCreature, map);
                     terminal = Terminal(pickerRunes, selectedCreature, map);
                     terminal.setupTerminal(*selectedCreature);
                     // pre-load saved program separately
                     if (!selectedCreature->getProgram().empty()) {
-                        std::vector<Rune> savedRunes = Compiler::transform(
+                        std::vector<Rune> savedRunes = transform(
                             selectedCreature->getProgram(), selectedCreature, map);
                         terminal.loadProgram(savedRunes);
                     }
@@ -220,9 +236,13 @@ int main(){
                 auto queue = terminal.getQueue();
                 std::vector<Rune> runeVec;
                 for (auto* r : queue) runeVec.push_back(*r);
-                // don't call initiallize here — it clears crePtrArr
-                Compiler::createInstructions(runeVec);
+                auto result = Compiler::createInstructions(runeVec);
+                // copy instructions back into the creature
+                for(int i = 0; i < 12; i++){
+                    *selectedCreature->instructionArr[i] = *result[i];
+                }
                 selectedCreature->setProgram(Compiler::invTransform(runeVec));
+                Compiler::newCreature(selectedCreature);
                 terminal.resetCompile();
                 selectedCreature = nullptr;
             }

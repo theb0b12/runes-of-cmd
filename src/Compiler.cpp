@@ -21,42 +21,26 @@ void Compiler::newCreature(Creature* NC){
     crePtrArr.push_back(NC);
 }
 
-std::vector <Rune> Compiler::transform(std::vector <int> vec, Creature* holder, Map& map){
-    std::vector <Rune> output;
-    for(size_t i = 0; i < vec.size(); i++ ){
+std::vector<std::unique_ptr<Rune>> Compiler::transform(std::vector<int> vec, Creature* holder, Map& map){
+    std::vector<std::unique_ptr<Rune>> output;
+    for(size_t i = 0; i < vec.size(); i++){
         switch(vec[i]){
-            case 1:
-            output.push_back(Sight(holder,map));
-            break;
-            case 2:
-            output.push_back(Choice(holder,map));
-            break;
-            case 3:
-            output.push_back(Rune("Harmony",holder,map));
-            break;
-            case 4:
-            output.push_back(Rune("Discord",holder,map));
-            break;
-            case 5:
-            output.push_back(Wind(holder,map));
-            break;
-            case 6:
-            output.push_back(Twist(holder,map));
-            break;
-            case 7:
-            output.push_back(Violence(holder,map));
-            break;
-            case 8:
-            output.push_back(Rune("\n",holder,map));
-            break;
+            case 1: output.push_back(std::make_unique<Sight>(holder, map));             break;
+            case 2: output.push_back(std::make_unique<Choice>(holder, map));            break;
+            case 3: output.push_back(std::make_unique<Rune>("Harmony", holder, map));   break;
+            case 4: output.push_back(std::make_unique<Rune>("Discord", holder, map));   break;
+            case 5: output.push_back(std::make_unique<Wind>(holder, map));              break;
+            case 6: output.push_back(std::make_unique<Twist>(holder, map));             break;
+            case 7: output.push_back(std::make_unique<Violence>(holder, map));          break;
+            case 8: output.push_back(std::make_unique<Rune>("\n", holder, map));        break;
         }
     }
     return output;
 }
 
-std::vector <Rune> Compiler::transform(std::vector <std::vector<int>*> vec, Creature* holder, Map& map){
+std::vector<std::unique_ptr<Rune>> Compiler::transform(std::vector<std::vector<int>*> vec, Creature* holder, Map& map){
     int lineNum = 1;
-    std::vector <int> newVec;
+    std::vector<int> newVec;
     while(vec[0] != vec[lineNum]){
         lineNum++;
     }
@@ -66,7 +50,6 @@ std::vector <Rune> Compiler::transform(std::vector <std::vector<int>*> vec, Crea
         }
         newVec.push_back(8);
     }
-
     return transform(newVec, holder, map);
 }
 
@@ -157,15 +140,14 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
 
 
 void Compiler::resolve(){
-std::cout << "resolve called" << std::endl;
     if(crePtrArr.empty()) return;
+    std::cout << "resolving " << crePtrArr.size() << " creatures, step " << step << std::endl;
     for(size_t i = 0; i < crePtrArr.size(); i++){
-        std::vector<Rune> tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
-        std::vector <Rune*> ptrVec;
-        for(size_t i = 0; i < tempRune.size(); i++){
-            ptrVec.push_back(&tempRune[i]);
-        }
-        std::vector <Rune*> pass = std::vector <Rune*> (ptrVec.begin() + 1, ptrVec.end());
-        std::cout << ptrVec[0]->activate(pass) << std::endl;
+        auto tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
+        if(tempRune.empty()) continue;
+        std::vector<Rune*> pass;
+        for(size_t j = 1; j < tempRune.size(); j++)
+            pass.push_back(tempRune[j].get());
+        tempRune[0]->activate(pass);
     }
 }

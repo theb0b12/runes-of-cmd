@@ -19,9 +19,12 @@ class Compiler{
     static void resolve();
     static void newCreature(Creature*);
     static std::vector <int> invTransform(std::vector <Rune>);
-    static std::vector <Rune> transform(std::vector<int>, Creature*, Map&);
-    static std::vector <Rune> transform(std::vector<std::vector<int>*>, Creature*, Map&);
+    // static std::vector <Rune> transform(std::vector<int>, Creature*, Map&);
+    // static std::vector <Rune> transform(std::vector<std::vector<int>*>, Creature*, Map&);
     static std::vector <std::vector <int>*> createInstructions(std::vector <Rune>);
+
+    static std::vector<std::unique_ptr<Rune>> transform(std::vector<int>, Creature*, Map&);
+    static std::vector<std::unique_ptr<Rune>> transform(std::vector<std::vector<int>*>, Creature*, Map&);
     
     static bool hasCreatures() { return !crePtrArr.empty(); }
     

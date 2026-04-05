@@ -1,6 +1,6 @@
 #include "Terminal.hpp"
 #include <iostream>
-#include "Compiler.hpp"
+
 
 #include <cmath>
 
@@ -67,10 +67,13 @@ void Terminal::setupTerminal(Creature& c) {
         _lineNumbers.back()->setFillColor({ 80, 80, 100 });
         _lineNumbers.back()->setPosition({ o.x + 10.f, ly + lineH / 2.f - 8.f });
     }
-
     // initialise empty lines
     _lines.assign(MAX_LINES, {});
     _cursorLine = 0;
+
+    
+
+
 
     // picker panel (bottom portion)
     float pickerH = PANEL_H * PICKER_FRAC;
@@ -167,6 +170,7 @@ void Terminal::setupTerminal(Creature& c) {
 // rebuild editor tokens
 
 void Terminal::rebuildEditor() {
+    if (_lines.empty()) return;
     _tokenShapes.clear();
     _tokenButtons.clear();
     _prevTokenState.clear();
@@ -309,6 +313,7 @@ void Terminal::update(sf::Vector2f mouse) {
 // draw
 
 void Terminal::drawTerminal(sf::RenderWindow& window) {
+    if (_lines.empty()) return;
     window.draw(_bgPanel);
     window.draw(_editorBg);
 
@@ -351,4 +356,40 @@ void Terminal::drawTerminal(sf::RenderWindow& window) {
 
     // title drawn last so it's on top
     window.draw(*_titleText);
+}
+
+void Terminal::loadProgram(std::vector<Rune> runes) {
+    _lines.assign(MAX_LINES, {});
+    _cursorLine = 0;
+    _program.clear();
+
+    // find matching runes in runeArr by type to get stable pointers
+    for (auto& r : runes) {
+        if (_cursorLine >= MAX_LINES) break;
+        bool isNull = (r.getType() == "\n");
+        if (isNull) {
+            // find \n in runeArr
+            for (auto& pr : runeArr) {
+                if (pr.getType() == "\n") {
+                    if ((int)_lines[_cursorLine].size() < MAX_PER_LINE)
+                        _lines[_cursorLine].push_back(&pr);
+                    _program.push_back(&pr);
+                    if (_cursorLine < MAX_LINES - 1) _cursorLine++;
+                    break;
+                }
+            }
+        } else {
+            // find matching type in runeArr
+            for (auto& pr : runeArr) {
+                if (pr.getType() == r.getType()) {
+                    if ((int)_lines[_cursorLine].size() < 3) {
+                        _lines[_cursorLine].push_back(&pr);
+                        _program.push_back(&pr);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+    rebuildEditor();
 }

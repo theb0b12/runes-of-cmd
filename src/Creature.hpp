@@ -19,6 +19,10 @@ public:
     void addRune(int);
     void drawCreature(sf::RenderWindow&, Map&);
     int getId() const;
+
+    void setProgram(std::vector<int> prog) { program = prog; }
+    std::vector<int> getProgram() const { return program; }
+
 private:
     std::vector <int> possibleRunes;
     sf::CircleShape body;
@@ -29,6 +33,8 @@ private:
     int health;
     int id;
     std::vector <std::vector <int>*> instructionArr;
+
+    std::vector<int> program;
 };
 
 #endif

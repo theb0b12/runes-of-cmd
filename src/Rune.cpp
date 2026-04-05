@@ -9,7 +9,8 @@ static sf::Color colorForType(const std::string& t) {
     if (t == "Wind")     return { 180, 230, 255 };  // pale cyan
     if (t == "Twist")    return { 255, 220,  30 };  // yellow
     if (t == "Violence") return { 220,  30,  30 };  // red
-    return { 140, 140, 140 };                        // gray fallback
+    if (t == "\n")   return { 255, 100, 200 };  // pink — distinct and visible
+    return { 140, 140, 140 };                       // gray fallback
 }
 
 //Types can only be: "Sight", "Choice", "Harmony", "Discord", "Wind", "Twist", "Violence" "\n"

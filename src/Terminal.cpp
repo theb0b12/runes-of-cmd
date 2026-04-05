@@ -113,6 +113,15 @@ void Terminal::setupTerminal(Creature& c) {
     }
     _prevPickerState.assign(_pickerButtons.size(), false);
 
+    _prevPickerState.assign(_pickerButtons.size(), false);
+    _prevCompileState = false;
+    _prevExitState    = false;
+    _compiled         = false;
+    _exitRequested    = false;
+    _program.clear();
+    _lines.assign(MAX_LINES, {});
+    _cursorLine = 0;
+
     // compile button
     float btnW = 160.f, btnH = 40.f;
     float btnX = o.x + PANEL_W - btnW - PAD * 2;
@@ -176,6 +185,10 @@ void Terminal::rebuildEditor() {
 
         for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
             Rune* r     = _lines[li][ti];
+            for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
+                Rune* r = _lines[li][ti];
+                bool isNullTerminator = (r->getType() == "\n");
+            }
             bool isNullTerminator = (r->getType() == "\n");
             float tokenW = isNullTerminator ? tokenH : (TILE * 0.85f);
 
@@ -228,21 +241,27 @@ void Terminal::update(sf::Vector2f mouse) {
         bool cur = _pickerButtons[i]->getToggle();
         if (cur != _prevPickerState[i]) {
             _prevPickerState[i] = cur;
-            Rune* r     = &runeArr[i];
+            Rune* r = &runeArr[i];
             bool isNullTerminator = (r->getType() == "\n");
+
             if (_cursorLine < MAX_LINES) {
                 if (isNullTerminator) {
-                    if ((int)_lines[_cursorLine].size() < MAX_PER_LINE)
-                        _lines[_cursorLine].push_back(r);
-                    _program.push_back(r);
-                    if (_cursorLine < MAX_LINES - 1) _cursorLine++;
-                } else {
-                    if ((int)_lines[_cursorLine].size() < MAX_PER_LINE) {
+                    // only allow one newline per line, and don't allow newline on last line
+                    bool alreadyHasNewline = !_lines[_cursorLine].empty() && 
+                                            _lines[_cursorLine].back()->getType() == "\n";
+                    if (!alreadyHasNewline && _cursorLine < MAX_LINES - 1) {
                         _lines[_cursorLine].push_back(r);
                         _program.push_back(r);
+                        rebuildEditor();
+                        _cursorLine++;
+                    }
+                } else {
+                    if ((int)_lines[_cursorLine].size() < 3) {
+                        _lines[_cursorLine].push_back(r);
+                        _program.push_back(r);
+                        rebuildEditor();
                     }
                 }
-                rebuildEditor();
             }
         }
     }

@@ -14,7 +14,7 @@ public:
     Terminal() = default;
     Terminal(std::vector<Rune> runeArr, Creature* creature, Map& m);
     void setupTerminal(Creature& creature);
-    void update(sf::Vector2f mousePos);
+    void update(sf::Vector2f mousePos, float);
     void drawTerminal(sf::RenderWindow& window);
 
     std::vector<Rune*> getQueue() const { return _program; }
@@ -94,4 +94,7 @@ private:
     Map*               mapPtr    = nullptr;
     bool               _compiled = false;
     bool               _exitRequested = false;
+
+
+    std::vector<Animation> _runeAnims;
 };

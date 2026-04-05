@@ -18,7 +18,7 @@ void Terminal::setupTerminal(Creature& c) {
     creature = &c;
 
     if (!_font.openFromFile("ttf/Hack-Regular.ttf"))
-        std::cerr << "Terminal: failed to load font\n";
+        std::cerr << "Terminal: failed to load fontescape";
 
     const sf::Vector2f o = panelOrigin();
 
@@ -44,6 +44,18 @@ void Terminal::setupTerminal(Creature& c) {
     _editorBg.setSize({ PANEL_W, editorH });
     _editorBg.setPosition({ o.x, editorY });
     _editorBg.setFillColor({ 22, 22, 28, 255 });
+
+    //rune animations
+    _runeAnims.clear();
+    _runeAnims.reserve(runeArr.size());
+
+    for (auto& r : runeArr) {
+        std::string path = "assets/runes/" + r.getType();
+
+        Animation anim(path, 6.f); // 6 FPS is a good UI speed
+
+        _runeAnims.push_back(std::move(anim));
+    }
 
     // line number gutters
     float lineH   = editorH / MAX_LINES;
@@ -82,27 +94,55 @@ void Terminal::setupTerminal(Creature& c) {
 
     float cardStartX = o.x + PAD * 2;
     float cardY      = pickerY + PAD * 2;
+
     for (int i = 0; i < (int)runeArr.size(); i++) {
         int   col = i % COLS;
         int   row = i / COLS;
         float cx  = cardStartX + col * (TILE + PAD);
         float cy  = cardY      + row * (TILE + PAD + 18.f);
 
+        // background card (keep this)
         sf::RectangleShape card({ TILE, TILE });
         card.setPosition({ cx, cy });
-        card.setFillColor(runeArr[i].getSprite().getFillColor());
+        card.setFillColor({ 20, 20, 26 }); // subtle dark instead of rune color
         card.setOutlineColor({ 60, 60, 80 });
         card.setOutlineThickness(1.5f);
         _pickerCardShapes.push_back(card);
-        _pickerButtons.push_back(std::make_unique<SimpleButton>(&_pickerCardShapes.back()));
 
-        bool isNull = (runeArr[i].getType() == "\n");
+        _pickerButtons.push_back(
+            std::make_unique<SimpleButton>(&_pickerCardShapes.back())
+        );
+
+        // 🔥 ANIMATION SETUP
+        auto& anim = _runeAnims[i];
+
+        auto texSize = anim.getSprite().getTexture().getSize();
+
+        float scale = std::min(
+            TILE / (float)texSize.x,
+            TILE / (float)texSize.y
+        );
+
+        anim.setScale({ scale, scale });
+
+        // center inside tile
+        auto bounds = anim.getSprite().getLocalBounds();
+        anim.setPosition({
+            cx + (TILE - bounds.size.x * scale) / 2.f,
+            cy + (TILE - bounds.size.y * scale) / 2.f
+        });
+
+        // label (unchanged)
+        bool isNull = (runeArr[i].getType() == "escape");
         _pickerLabels.push_back(sf::Text(_font));
-        _pickerLabels.back()->setString(isNull ? "\\n" : runeArr[i].getType());
+        _pickerLabels.back()->setString(isNull ? "\escape" : runeArr[i].getType());
         _pickerLabels.back()->setCharacterSize(11);
-        _pickerLabels.back()->setFillColor(isNull ? sf::Color{180, 230, 255} : sf::Color::White);
+        _pickerLabels.back()->setFillColor(
+            isNull ? sf::Color{180, 230, 255} : sf::Color::White
+        );
         _pickerLabels.back()->setPosition({ cx, cy + TILE + 2.f });
     }
+
 
     // compile button
     float btnW = 160.f, btnH = 40.f;
@@ -177,7 +217,7 @@ void Terminal::rebuildEditor() {
 
         for (int ti = 0; ti < (int)_lines[li].size(); ti++) {
             Rune* r           = _lines[li][ti];
-            bool  isNull      = (r->getType() == "\n");
+            bool  isNull      = (r->getType() == "escape");
             float tokenW      = isNull ? tokenH : (TILE * 0.85f);
 
             sf::RectangleShape tok({ tokenW, tokenH });
@@ -199,7 +239,7 @@ void Terminal::rebuildPickerHighlights() {}
 
 // update
 
-void Terminal::update(sf::Vector2f mouse) {
+void Terminal::update(sf::Vector2f mouse, float DT) {
     // escape key
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
         _exitRequested = true;
@@ -223,13 +263,13 @@ void Terminal::update(sf::Vector2f mouse) {
         if (cur != _prevPickerState[i]) {
             _prevPickerState[i] = cur;
             Rune* r    = &runeArr[i];
-            bool isNull = (r->getType() == "\n");
+            bool isNull = (r->getType() == "Escape");
 
             if (_cursorLine < MAX_LINES) {
                 if (isNull) {
                     // one newline per line max, not on last line
                     bool alreadyHasNewline = !_lines[_cursorLine].empty() &&
-                                             _lines[_cursorLine].back()->getType() == "\n";
+                                             _lines[_cursorLine].back()->getType() == "Escape";
                     if (!alreadyHasNewline && _cursorLine < MAX_LINES - 1) {
                         _lines[_cursorLine].push_back(r);
                         _program.push_back(r);
@@ -281,6 +321,10 @@ void Terminal::update(sf::Vector2f mouse) {
     if (compileNow && !_prevCompileState && !_program.empty())
         _compiled = true;
     _prevCompileState = compileNow;
+
+    float dt = DT;
+    for (auto& anim : _runeAnims)
+    anim.update(dt);
 }
 
 // draw
@@ -318,7 +362,10 @@ void Terminal::drawTerminal(sf::RenderWindow& window) {
 
     // picker
     window.draw(_pickerBg);
-    for (auto& card : _pickerCardShapes) window.draw(card);
+    for (int i = 0; i < _pickerCardShapes.size(); i++) {
+        window.draw(_pickerCardShapes[i]);                 // background
+        window.draw(_runeAnims[i].getSprite());            // 🔥 animation
+    }
     for (auto& lbl  : _pickerLabels)     window.draw(*lbl);
 
     // compile and exit buttons
@@ -340,11 +387,11 @@ void Terminal::loadProgram(std::vector<Rune> runes) {
 
     for (auto& r : runes) {
         if (_cursorLine >= MAX_LINES) break;
-        bool isNull = (r.getType() == "\n");
+        bool isNull = (r.getType() == "Escape");
 
         if (isNull) {
             for (auto& pr : runeArr) {
-                if (pr.getType() == "\n") {
+                if (pr.getType() == "Escape") {
                     if ((int)_lines[_cursorLine].size() < MAX_PER_LINE)
                         _lines[_cursorLine].push_back(&pr);
                     _program.push_back(&pr);

@@ -59,16 +59,21 @@ bool Creature::getEnemy(){
 
 //creature moves then faces the direction the creature is moving in
 void Creature::moveBy(int x, int y, Map& map){
-    // std::cout << "Moving creature " << id << " from " << xPos << "," << yPos;
     if(inFront(map) == 0){
-    xPos += x;
-    yPos += y;
-    if(xPos > 11) xPos = 11;
-    if(xPos < 0)  xPos = 0;
-    if(yPos > 5)  yPos = 5;
-    if(yPos < 0)  yPos = 0;
+
+        xPos += x;
+        yPos += y;
+
+        if(x > 0) isFacing = 1;
+        else if(x < 0) isFacing = -1;
+        else if(y > 0) isFacing = 2;
+        else if(y < 0) isFacing = -2;
+
+        if(xPos > 11) xPos = 11;
+        if(xPos < 0)  xPos = 0;
+        if(yPos > 5)  yPos = 5;
+        if(yPos < 0)  yPos = 0;
     }
-    // std::cout << " to " << xPos << "," << yPos << " (ptr: " << this << ")" << std::endl;
 }
 
 //Add a rune to the creature's possible runes
@@ -111,31 +116,25 @@ void Creature::drawCreature(sf::RenderWindow& window, Map& map)
 //Check if there is an enemy in front of the creature, returns id of creature if found and 0 if empty
 int Creature::inFront(Map& map){
     if(isFacing == 2){
-        if(yPos == 0)
-            return 0;
-        else
-            return map.occupied[xPos][yPos-1];
-    }
-    if(isFacing == -2){
-        if(yPos == 6)
-            return 0;
-        else
-            return map.occupied[xPos][yPos+1];
-    }
-    if(isFacing == 1){
-        if(xPos == 12)
-            return 0;
-        else
-            return map.occupied[xPos+1][yPos];
-    }
-    if(isFacing == -1){
-        if(xPos == 0)
-            return 0;
-        else
-            return map.occupied[xPos-1][yPos];
+        if(yPos >= 5) return 0;
+        return map.occupied[xPos][yPos+1];
     }
 
-    //check if there is an object in front of the creature and wheather it is an enemy
+    if(isFacing == -2){
+        if(yPos <= 0) return 0;
+        return map.occupied[xPos][yPos-1];
+    }
+
+    if(isFacing == 1){
+        if(xPos >= 11) return 0;
+        return map.occupied[xPos+1][yPos];
+    }
+
+    if(isFacing == -1){
+        if(xPos <= 0) return 0;
+        return map.occupied[xPos-1][yPos];
+    }
+
     return 0;
 }
 

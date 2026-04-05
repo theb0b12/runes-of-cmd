@@ -148,13 +148,15 @@ void Compiler::resolve(){
         // for(int x : *crePtrArr[i]->instructionArr[step])
         //     std::cout << x << " ";
         // std::cout << std::endl;
-        auto tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
+        for(size_t j =0; j < crePtrArr[i]->instructionArr.size(); j++){
+        auto tempRune = transform(*(crePtrArr[i]->instructionArr[j]), crePtrArr[i], *areamap);
 
         // std::cout << "activating: " << tempRune[0]->getType() << std::endl;
         std::vector<Rune*> pass;
-        for(size_t j = 1; j < tempRune.size(); j++)
-            pass.push_back(tempRune[j].get());
+        for(size_t k = 1; k < tempRune.size(); k++)
+            pass.push_back(tempRune[k].get());
         tempRune[0]->activate(pass);
+        }
     }
 }
 

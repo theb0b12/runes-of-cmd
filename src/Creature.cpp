@@ -1,5 +1,5 @@
 #include "Creature.hpp"
-
+#include <iostream>
 
 //constructor
 Creature::Creature(int x, int y, int hp, bool enemy, int count){
@@ -62,6 +62,7 @@ bool Creature::getEnemy(){
 
 //creature moves then faces the direction the creature is moving in
 void Creature::moveBy(int x, int y){
+    std::cout << "Motion" << std::endl;
     xPos += x;
     yPos += y;
 }

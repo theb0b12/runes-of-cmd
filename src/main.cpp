@@ -78,7 +78,7 @@ int main(){
     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // whatever C1 has
     std::vector<Rune> c1Runes = Compiler::transform(runeIds, &C1, map);
     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8};
-    std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
+    std::vector<Rune> c1Runes = Compiler::transform(runeIds, &C1, map);
 
 
     Terminal terminal;
@@ -198,7 +198,7 @@ int main(){
                     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4};
                     std::vector<Rune> runes = Compiler::transform(runeIds, selectedCreature, map);
                     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // add 8
-                    std::vector<Rune> runes = transform(runeIds, selectedCreature, map);
+                    std::vector<Rune> runes = Compiler::transform(runeIds, selectedCreature, map);
                     terminal = Terminal(runes, selectedCreature, map);
                     terminal.setupTerminal(*selectedCreature);
                     guiButton.setToggle(true);

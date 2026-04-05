@@ -6,3 +6,23 @@
         - Add rune layout for summons and give enemies base rune-sets
 - Button prototype
     - abstraction
+
+
+
+
+1:12AM 4/5
+- Collison
+    *w/ ghosts*
+    with board
+- Runes
+    sprites
+    resolve/ activate
+- enemey
+    spawning
+    waves
+    *runes*
+- Win / lose state
+- art improvement
+    stands
+- dev post finish
+- text tutorial

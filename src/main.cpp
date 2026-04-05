@@ -18,6 +18,7 @@
 #include "Map.hpp"
 #include "Terminal.hpp"
 #include "Animation.hpp"
+#include "Compiler.hpp"
 
 
 
@@ -43,54 +44,7 @@ void createCreature(bool enemy, Map& map){
     }
 }
 
-std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
-    std::vector <Rune> output;
-    for(int i = 0; i < vec.size(); i++ ){
-        switch(vec[i]){
-            case 1:
-            output.push_back(Sight(holder,map));
-            break;
-            case 2:
-            output.push_back(Choice(holder,map));
-            break;
-            case 3:
-            output.push_back(Rune("Harmony",holder,map));
-            break;
-            case 4:
-            output.push_back(Rune("Discord",holder,map));
-            break;
-            case 5:
-            output.push_back(Wind(holder,map));
-            break;
-            case 6:
-            output.push_back(Twist(holder,map));
-            break;
-            case 7:
-            output.push_back(Violence(holder,map));
-            break;
-            case 8:
-            output.push_back(Rune("\n",holder,map));
-            break;
-        }
-    }
-    return output;
-}
 
-std::vector <Rune> transform(std::vector <std::vector<int>*> vec, Creature* holder, Map& map){
-    int lineNum = 1;
-    std::vector <int> newVec;
-    while(vec[0] != vec[lineNum]){
-        lineNum++;
-    }
-    for(int i = 0; i < lineNum; i++){
-        for(size_t j = 0; j < vec[i]->size(); j++){
-            newVec.push_back(vec[i]->at(j));
-        }
-        newVec.push_back(8);
-    }
-
-    return transform(newVec, holder, map);
-}
 
 int spawnTimer = 800;
 
@@ -122,7 +76,7 @@ int main(){
     Creature C1(3,4,-2,true,1);
 
     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8}; // whatever C1 has
-    std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
+    std::vector<Rune> c1Runes = Compiler::transform(runeIds, &C1, map);
 
 
     Terminal terminal;
@@ -229,7 +183,7 @@ int main(){
                 if (found && found->getId() % 2 != 1) {
                     selectedCreature = found;
                     std::vector<int> runeIds = {1, 2, 5, 6, 7, 4};
-                    std::vector<Rune> runes = transform(runeIds, selectedCreature, map);
+                    std::vector<Rune> runes = Compiler::transform(runeIds, selectedCreature, map);
                     terminal = Terminal(runes, selectedCreature, map);
                     terminal.setupTerminal(*selectedCreature);
                     guiButton.setToggle(true);

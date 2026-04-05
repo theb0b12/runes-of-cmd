@@ -58,14 +58,16 @@ bool Creature::getEnemy(){
 }
 
 //creature moves then faces the direction the creature is moving in
-void Creature::moveBy(int x, int y){
+void Creature::moveBy(int x, int y, Map& map){
     // std::cout << "Moving creature " << id << " from " << xPos << "," << yPos;
+    if(inFront(map) == 0){
     xPos += x;
     yPos += y;
     if(xPos > 11) xPos = 11;
     if(xPos < 0)  xPos = 0;
     if(yPos > 5)  yPos = 5;
     if(yPos < 0)  yPos = 0;
+    }
     // std::cout << " to " << xPos << "," << yPos << " (ptr: " << this << ")" << std::endl;
 }
 

@@ -20,7 +20,6 @@
 #include "Animation.hpp"
 #include "Compiler.hpp"
 
-
 std::vector<Rune> transform(std::vector<int> vec, Creature* holder, Map& map){
     std::vector<Rune> output;
     for(size_t i = 0; i < vec.size(); i++){
@@ -41,68 +40,61 @@ std::vector<Rune> transform(std::vector<int> vec, Creature* holder, Map& map){
 const int windX = 1920;
 const int windY = 1080;
 
-std::vector <Creature> creVec;
+std::vector<Creature> creVec;
 int numGood = 0;
-int numBad = 0;
+int numBad  = 0;
 
 std::random_device rd;
 std::mt19937 mt(rd());
-std::uniform_int_distribution<int> intDist(0,5);
+std::uniform_int_distribution<int> intDist(0, 5);
 
 bool createCreature(bool enemy, Map& map){
     int yheight = intDist(mt);
     if(enemy && map.occupied[11][yheight] == 0){
-        creVec.push_back(Creature(11,yheight, 3,  true, numBad * 2 + 1));
+        creVec.push_back(Creature(11, yheight, 3, true, numBad * 2 + 1)); // health=3
         numBad++;
         return true;
-    } else if (map.occupied[0][yheight] == 0) {
-        creVec.push_back(Creature(0,yheight, 3, false, numGood * 2 + 2));
+    } else if(!enemy && map.occupied[0][yheight] == 0){
+        creVec.push_back(Creature(0, yheight, 3, false, numGood * 2 + 2)); // health=3
         numGood++;
         return true;
     }
     return false;
 }
 
-
-
-int spawnTimer = 0;
-
+int wave = 1;
+int enemiesPerWave = 3;
+int goodPerWave = 3;
+int enemiesSpawned = 0;
+int goodSpawned = 0;
+float waveTimer = 0.f;
+float spawnInterval = 2.f;   // seconds between spawns
+float resolveTimer = 0.f;
+const float RESOLVE_INTERVAL = 0.5f;
+bool waveActive = false;
 
 int main(){
-    sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD",sf::Style::Default/*,sf::State::Fullscreen*/);
+    sf::RenderWindow window(sf::VideoMode({windX, windY}), "Runes of CMD", sf::Style::Default);
     sf::Vector2u windowSize = window.getSize();
     auto [windX, windY] = windowSize;
     float windowX = (float)windX;
-    float windowY = (float)windY; 
-    // frame rate set as not to have it hardware limited
+    float windowY = (float)windY;
     window.setFramerateLimit(60);
 
-    // clock instantiation
     sf::Clock clock;
 
-
     Map map(windowX, windowY);
-    
+
     Player player(map);
     player.setSpeed(300);
 
     Animation playerWalk("assets/new_player", 8.f, true);
-    Animation playerIdle("assets/new_player_idle", 4.f, true); // slower for idle
+    Animation playerIdle("assets/new_player_idle", 4.f, true);
     playerWalk.setScale({ 9.f, 9.f });
     playerIdle.setScale({ 9.f, 9.f });
 
-    //Creature Feature featuring the creature
-    Creature C1(3,4,-2,true,2);
-
-    std::vector<int> runeIds = {1, 2, 5, 6, 7, 4, 8};
-    std::vector<Rune> c1Runes = transform(runeIds, &C1, map);
-
-
     Terminal terminal;
     Creature* selectedCreature = nullptr;
-    
-
-
 
     // music mute button
     sf::RectangleShape muteButtonShape({80.f, 40.f});
@@ -110,7 +102,8 @@ int main(){
     bool muted = false;
 
     sf::Font uiFont;
-    uiFont.openFromFile("ttf/Hack-Regular.ttf");
+    if (!uiFont.openFromFile("ttf/Hack-Regular.ttf"))
+        std::cerr << "Failed to load font\n";
     sf::Text muteLabel(uiFont);
     muteLabel.setString("MUTE");
     muteLabel.setCharacterSize(14);
@@ -118,34 +111,23 @@ int main(){
     auto mlb = muteLabel.getLocalBounds();
     muteLabel.setOrigin({mlb.size.x / 2.f, mlb.size.y / 2.f});
 
-
-    // position the button
-    float btnX = (1920.f * 0.3f) - 90.f; // 10px from right edge of castle
+    float btnX = (1920.f * 0.3f) - 90.f;
     float btnY = 10.f;
-    muteButtonShape.setOrigin({0.f, 0.f}); // remove origin offset to make math easier
+    muteButtonShape.setOrigin({0.f, 0.f});
     muteButtonShape.setPosition({ btnX, btnY });
-
-    // center label on button
-    muteLabel.setPosition({
-        btnX + 40.f, // half of button width (80/2)
-        btnY + 20.f  // half of button height (40/2)
-    });
-
+    muteLabel.setPosition({ btnX + 40.f, btnY + 20.f });
 
     bool spacePressed = false;
 
-    // music stuff
+    // music
     sf::Music bgMusic;
-    if (!bgMusic.openFromFile("assets/music/bluebossav1-blasterhacks2026.ogg")) {
+    if (!bgMusic.openFromFile("assets/music/bluebossav1-blasterhacks2026.ogg"))
         std::cerr << "Failed to load music\n";
-    }
     bgMusic.setLooping(true);
     bgMusic.setVolume(0.f);
-    // CHANGE THIS BEFORE LAUNCH, FOR TESTING ONLY
     bgMusic.play();
 
-
-    creVec.reserve(100); // prevent reallocation invalidating Compiler pointers
+    creVec.reserve(100);
     Compiler::initiallize(map);
 
     while(window.isOpen()){
@@ -159,64 +141,44 @@ int main(){
         std::string dir = playerWalk.getCurrentDirection();
         bool moving = false;
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
-            player.moveBy(0, 1, dt);  dir = "down";  moving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
-            player.moveBy(0, -1, dt); dir = "up";    moving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-            player.moveBy(1, 0, dt);  dir = "right"; moving = true;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
-            player.moveBy(-1, 0, dt); dir = "left";  moving = true;
-        }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){ player.moveBy(0,  1, dt); dir = "down";  moving = true; }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){ player.moveBy(0, -1, dt); dir = "up";    moving = true; }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){ player.moveBy( 1, 0, dt); dir = "right"; moving = true; }
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){ player.moveBy(-1, 0, dt); dir = "left";  moving = true; }
 
         Animation& activeAnim = moving ? playerWalk : playerIdle;
         activeAnim.setDirection(dir, moving ? "assets/new_player" : "assets/new_player_idle");
         activeAnim.update(dt);
         activeAnim.setPosition(player.getPosition());
 
-        bool spacePressedNow = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
-        bool spaceJustPressed = spacePressedNow && !spacePressed;
-        spacePressed = spacePressedNow;
+        bool spacePressedNow   = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space);
+        bool spaceJustPressed  = spacePressedNow && !spacePressed;
+        spacePressed           = spacePressedNow;
 
-        if (spaceJustPressed) {
+        if(spaceJustPressed){
             int targetX = player.getXTile();
             int targetY = player.getYTile();
-
-            switch (player.getFacing()) {
+            switch(player.getFacing()){
                 case  1: targetX += 1; break;
                 case -1: targetX -= 1; break;
                 case  2: targetY += 1; break;
                 case -2: targetY -= 1; break;
             }
-
             targetX = std::clamp(targetX, 0, 11);
             targetY = std::clamp(targetY, 0, 5);
 
             int occupantId = map.occupied[targetX][targetY];
-            if (occupantId != 0) {
+            if(occupantId != 0){
                 Creature* found = nullptr;
-                if (C1.getId() == occupantId) {
-                    found = &C1;
-                } else {
-                    for (auto& cr : creVec) {
-                        if (cr.getId() == occupantId) {
-                            found = &cr;
-                            break;
-                        }
-                    }
+                for(auto& cr : creVec){
+                    if(cr.getId() == occupantId){ found = &cr; break; }
                 }
-
-                if (found && found->getId() % 2 != 1) {
+                if(found && found->getId() % 2 == 0){
                     selectedCreature = found;
-                    // picker always gets the full rune set — use free transform, not Compiler::transform
-                    std::vector<Rune> pickerRunes = transform({1, 2, 5, 6, 7, 4, 8}, selectedCreature, map);
+                    std::vector<Rune> pickerRunes = transform({1,2,5,6,7,3,4,8}, selectedCreature, map);
                     terminal = Terminal(pickerRunes, selectedCreature, map);
                     terminal.setupTerminal(*selectedCreature);
-                    // pre-load saved program separately
-                    if (!selectedCreature->getProgram().empty()) {
+                    if(!selectedCreature->getProgram().empty()){
                         std::vector<Rune> savedRunes = transform(
                             selectedCreature->getProgram(), selectedCreature, map);
                         terminal.loadProgram(savedRunes);
@@ -225,82 +187,123 @@ int main(){
             }
         }
 
-        // mouse position
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+        // mouse
+        sf::Vector2i pixelPos    = sf::Mouse::getPosition(window);
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
 
-
-        if (selectedCreature) {
+        if(selectedCreature){
             terminal.update(mouse_position);
-            if (terminal.isCompiled()) {
+            if(terminal.isCompiled()){
                 auto queue = terminal.getQueue();
                 std::vector<Rune> runeVec;
-                for (auto* r : queue) runeVec.push_back(*r);
+                for(auto* r : queue) runeVec.push_back(*r);
                 auto result = Compiler::createInstructions(runeVec);
-                // copy instructions back into the creature
-                for(int i = 0; i < 12; i++){
+                for(int i = 0; i < 12; i++)
                     *selectedCreature->instructionArr[i] = *result[i];
-                }
                 selectedCreature->setProgram(Compiler::invTransform(runeVec));
                 Compiler::newCreature(selectedCreature);
                 terminal.resetCompile();
                 selectedCreature = nullptr;
             }
         }
-        if (terminal.isExitRequested()) {
+        if(terminal.isExitRequested()){
             terminal.resetExit();
             selectedCreature = nullptr;
         }
 
-        //spawn tests
-        spawnTimer--;
-        if(spawnTimer < 0){
-            if(createCreature(true, map)){
-                Compiler::newCreature(&creVec[creVec.size() - 1]);
+        // wave and spawn logic
+        waveTimer += dt;
+        if(!waveActive){
+            // start wave after 3 seconds
+            if(waveTimer > 3.f){
+                waveActive = true;
+                enemiesSpawned = 0;
+                goodSpawned = 0;
+                waveTimer = 0.f;
+                std::cout << "Wave " << wave << " starting!\n";
             }
-            if(createCreature(false, map)){
-                Compiler::newCreature(&creVec[creVec.size() - 1]);
-            }
-            spawnTimer = 100;
         }
-        
+
+        if(waveActive && waveTimer >= spawnInterval){
+            waveTimer = 0.f;
+            // fill occupied before spawning so we don't overlap
+            map.clearOccupied();
+            for(size_t i = 0; i < creVec.size(); i++)
+                map.occupied[creVec[i].getXpos()][creVec[i].getYpos()] = creVec[i].getId();
+
+            if(enemiesSpawned < enemiesPerWave + (wave - 1)){
+                if(createCreature(true, map)){
+                    Compiler::newCreature(&creVec[creVec.size()-1]);
+                    Creature::registerCreature(&creVec[creVec.size()-1]);
+                    enemiesSpawned++;
+                }
+            }
+            if(goodSpawned < goodPerWave + (wave - 1)){
+                if(createCreature(false, map)){
+                    Compiler::newCreature(&creVec[creVec.size()-1]);
+                    Creature::registerCreature(&creVec[creVec.size()-1]);
+                    goodSpawned++;
+                }
+            }
+
+            // wave complete when all spawned and all enemies dead
+            int enemiesAlive = 0;
+            for(auto& c : creVec) if(c.getEnemy()) enemiesAlive++;
+            if(enemiesSpawned >= enemiesPerWave + (wave-1) && enemiesAlive == 0){
+                waveActive = false;
+                wave++;
+                waveTimer = 0.f;
+                std::cout << "Wave " << wave-1 << " complete! Next wave in 3s\n";
+            }
+        }
+
+        // mute button
         muteButton.update(mouse_position);
         bool mutedNow = muteButton.getToggle();
-        if (mutedNow != muted) {
+        if(mutedNow != muted){
             muted = mutedNow;
             bgMusic.setVolume(muted ? 0.f : 20.f);
             muteLabel.setString(muted ? "UNMUTE" : "MUTE");
-            // re-center label after string change
             auto lb = muteLabel.getLocalBounds();
             muteLabel.setOrigin({ lb.size.x / 2.f, lb.size.y / 2.f });
             muteLabel.setPosition({ btnX + 40.f, btnY + 20.f });
         }
 
-        // displaying stuff
+        // pass 1: fill occupied without drawing
         map.clearOccupied();
+        for(size_t i = 0; i < creVec.size(); i++)
+            map.occupied[creVec[i].getXpos()][creVec[i].getYpos()] = creVec[i].getId();
 
+        // resolve with occupied populated
+        resolveTimer += dt;
+        if(Compiler::hasCreatures() && resolveTimer >= RESOLVE_INTERVAL) {
+            Compiler::resolve();
+            resolveTimer = 0.f;
+            Compiler::removeDeadCreatures();
+            creVec.erase(
+                std::remove_if(creVec.begin(), creVec.end(),
+                    [](const Creature& c){ return c.isDead(); }),
+                creVec.end()
+            );
+        }
+
+        // draw
+        map.clearOccupied();
         window.clear();
-
         map.draw(window);
 
-        if(Compiler::hasCreatures() && spawnTimer < 1) Compiler::resolve();
-
-        for(int i = 0; i < creVec.size(); i++){
-            creVec[i].drawCreature(window,map);
-        }
-        C1.drawCreature(window,map);
+        for(size_t i = 0; i < creVec.size(); i++)
+            creVec[i].drawCreature(window, map);
 
         window.draw(activeAnim.getSprite());
 
-        if (selectedCreature) {
+        if(selectedCreature){
             terminal.drawTerminal(window);
         } else {
             window.draw(muteButtonShape);
             window.draw(muteLabel);
         }
-        
 
         window.display();
-
     }
 }

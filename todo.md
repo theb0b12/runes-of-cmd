@@ -10,7 +10,7 @@
 
 
 
-1:12AM 4/5
+### 1:12AM 4/5
 - Collison
     *w/ ghosts*
     with board

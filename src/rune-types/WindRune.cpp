@@ -3,27 +3,22 @@
 Wind::Wind(Creature* h, Map& map) : Rune("Wind", h, map){}
 
 int Wind::activate(std::vector<Rune*> r){
-    std::cout << "wind" << std::endl;
-    if(!r.empty()){
-        //if any follow-up runes are provided, return error code since Wind should not have any follow-up runes
-        return -1;
-    } 
-        Creature* holder = getHolder();
-        int facing = holder->getFacing();
+    if(!r.empty() && r[0]->getType() != "\n") return -1;
+    Creature* holder = getHolder();
+    int facing = holder->getFacing();
+    int oldX = holder->getXpos();
+    int oldY = holder->getYpos();
 
-        switch(facing){
-            case 1: //facing right
-                holder->moveBy(1.0, 0);
-                break;
-            case -1: //facing left
-                holder->moveBy(-1.0, 0);
-                break;
-            case 2: //facing up
-                holder->moveBy(0, -1.0); //move up
-                break;
-            case -2: //facing down
-                holder->moveBy(0, 1.0); //move down
-                break;
-        }
+    switch(facing){
+        case  1: holder->moveBy( 1,  0); break;
+        case -1: holder->moveBy(-1,  0); break;
+        case  2: holder->moveBy( 0, -1); break;
+        case -2: holder->moveBy( 0,  1); break;
+    }
+
+    // if position didn't change, we hit a wall — reverse direction
+    if(holder->getXpos() == oldX && holder->getYpos() == oldY){
+        holder->setFacing(-facing);
+    }
     return 1;
 }

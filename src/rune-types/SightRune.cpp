@@ -3,15 +3,17 @@
 Sight::Sight(Creature* h, Map& map) : Rune("Sight", h, map){}
 
 int Sight::activate(std::vector<Rune*> r){
-    if(r.empty() || (r[0]->getType() != "Harmony" && r[0]->getType() != "Discord")){
-        //if no follow-up rune is provided, or it is not a valid rune, return error code
-        return -1;
-    } if(r[0]->getType() == "Harmony" && getHolder()->inFront(map) % 2 == 0){
-        //if the follow-up rune is a Harmony rune, return a value indicating the creature can see an ally in front of it
-        return 1;
-    } else if (r[0]->getType() == "Discord" && getHolder()->inFront(map) % 2 == 0){
-        //if the follow-up rune is a Discord rune, return a value indicating the creature can see an enemy in front of it
-        return 1;
+    if(r.empty()) return -1;
+    std::string modifier = r[0]->getType();
+    int targetId = getHolder()->inFront(map);
+    if(targetId == 0) return 0; // nothing in front
+    if(modifier == "Discord"){
+        // true if enemy in front (odd id)
+        return targetId % 2 == 1 ? 1 : 0;
     }
-    return 0;
+    if(modifier == "Harmony"){
+        // true if ally in front (even id)
+        return targetId % 2 == 0 ? 1 : 0;
+    }
+    return -1;
 }

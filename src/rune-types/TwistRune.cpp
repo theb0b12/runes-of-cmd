@@ -3,10 +3,8 @@
 Twist::Twist(Creature* h, Map& map) : Rune("Twist", h, map){}
 
 int Twist::activate(std::vector<Rune*> r){
-    if(!r.empty()){
-        //if any follow-up runes are provided, return error code since Twist should not have any follow-up runes
-        return -1;
-    } 
+    if(!r.empty() && r[0]->getType() != "\n") return -1;
+    
     //Creature turns 90 degrees to the right, so the direction it is facing changes accordingly
         Creature* holder = getHolder();
         int facing = holder->getFacing();

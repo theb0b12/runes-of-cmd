@@ -27,6 +27,8 @@ class Compiler{
     static std::vector<std::unique_ptr<Rune>> transform(std::vector<std::vector<int>*>, Creature*, Map&);
     
     static bool hasCreatures() { return !crePtrArr.empty(); }
+
+    static void removeDeadCreatures();
     
     private:
     static std::vector <std::vector <int>*> tempArr;

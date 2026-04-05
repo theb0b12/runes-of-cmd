@@ -1,5 +1,6 @@
 #include "Creature.hpp"
 #include <iostream>
+#include <algorithm>
 
 //constructor
 Creature::Creature(int x, int y, int hp, bool enemy, int count){
@@ -37,6 +38,8 @@ Creature::Creature(int x, int y, int hp, bool enemy, int count){
         _anim = Animation("assets/goodGuy", 4.f);
     }
     _anim.setScale({ 9.f, 9.f });
+
+    
 }
 
 //getters
@@ -62,9 +65,14 @@ bool Creature::getEnemy(){
 
 //creature moves then faces the direction the creature is moving in
 void Creature::moveBy(int x, int y){
-    std::cout << "Motion" << std::endl;
+    // std::cout << "Moving creature " << id << " from " << xPos << "," << yPos;
     xPos += x;
     yPos += y;
+    if(xPos > 11) xPos = 11;
+    if(xPos < 0)  xPos = 0;
+    if(yPos > 5)  yPos = 5;
+    if(yPos < 0)  yPos = 0;
+    // std::cout << " to " << xPos << "," << yPos << " (ptr: " << this << ")" << std::endl;
 }
 
 //Add a rune to the creature's possible runes
@@ -74,6 +82,7 @@ void Creature::addRune(int r){
 
 
 void Creature::drawCreature(sf::RenderWindow& window, Map& map){
+    // std::cout << "drawing creature " << id << " at " << xPos << "," << yPos << " (ptr: " << this << ")" << std::endl;
     float px = xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f;
     float py = (yPos - 3) * map.getTileHeight() + map.getHeight()/2;
     _anim.setPosition({ px, py });
@@ -84,41 +93,57 @@ void Creature::drawCreature(sf::RenderWindow& window, Map& map){
 
 //Check if there is an enemy in front of the creature, returns id of creature if found and 0 if empty
 int Creature::inFront(Map& map){
-if(isFacing == 2){
-    if(yPos == 0)
-        return 0;
-    else
-        return map.occupied[xPos][yPos-1];
-}
-if(isFacing == -2){
-    if(yPos == 6)
-        return 0;
-    else
-        return map.occupied[xPos][yPos+1];
-}
-if(isFacing == 1){
-    if(xPos == 12)
-        return 0;
-    else
-        return map.occupied[xPos+1][yPos];
-}
-if(isFacing == -1){
-    if(xPos == 0)
-        return 0;
-    else
-        return map.occupied[xPos-1][yPos];
-}
+    if(isFacing == 2){
+        if(yPos == 0)
+            return 0;
+        else
+            return map.occupied[xPos][yPos-1];
+    }
+    if(isFacing == -2){
+        if(yPos == 6)
+            return 0;
+        else
+            return map.occupied[xPos][yPos+1];
+    }
+    if(isFacing == 1){
+        if(xPos == 12)
+            return 0;
+        else
+            return map.occupied[xPos+1][yPos];
+    }
+    if(isFacing == -1){
+        if(xPos == 0)
+            return 0;
+        else
+            return map.occupied[xPos-1][yPos];
+    }
 
-//check if there is an object in front of the creature and wheather it is an enemy
-return 0;
+    //check if there is an object in front of the creature and wheather it is an enemy
+    return 0;
 }
-
-void Creature::attack(){
-    //attack regardless of whether there is an enemy in front or not
-    //to be implemented
-}
-
 
 int Creature::getId() const{
     return id;
+}
+
+
+void Creature::attack(Creature* target){
+    if(!target) return;
+    target->takeDamage(1);
+}
+
+
+std::vector<Creature*> Creature::_registry;
+
+std::vector<Creature*>& Creature::getRegistry() { return _registry; }
+
+void Creature::registerCreature(Creature* c) {
+    _registry.push_back(c);
+}
+
+void Creature::unregisterCreature(Creature* c) {
+    _registry.erase(
+        std::remove(_registry.begin(), _registry.end(), c),
+        _registry.end()
+    );
 }

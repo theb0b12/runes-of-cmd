@@ -14,7 +14,6 @@ public:
     int getHealth();
     int inFront(Map& map);
     bool getEnemy();
-    void attack();
     void moveBy(int, int);
     void setFacing(int f) { isFacing = f; }
     void addRune(int);
@@ -25,6 +24,16 @@ public:
     std::vector<int> getProgram() const { return program; }
 
     std::vector<std::vector<int>*> instructionArr;
+
+    bool isDead() const { return health <= 0; }
+    void takeDamage(int dmg) { health -= dmg; }
+
+    void attack(Creature* target);
+
+    static std::vector<Creature*>& getRegistry();
+    static void registerCreature(Creature* c);
+    static void unregisterCreature(Creature* c);
+    
 
 private:
     std::vector <int> possibleRunes;
@@ -39,6 +48,8 @@ private:
     std::vector<int> program;
 
     Animation _anim;
+
+    static std::vector<Creature*> _registry;
 };
 
 #endif

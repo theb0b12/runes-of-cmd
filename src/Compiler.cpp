@@ -1,4 +1,5 @@
 #include "Compiler.hpp"
+#include <algorithm>
 #include <iostream>
 // static member definitions
 std::vector<std::vector<int>*> Compiler::tempArr;
@@ -141,13 +142,26 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
 
 void Compiler::resolve(){
     if(crePtrArr.empty()) return;
-    std::cout << "resolving " << crePtrArr.size() << " creatures, step " << step << std::endl;
     for(size_t i = 0; i < crePtrArr.size(); i++){
+        if(crePtrArr[i]->getProgram().empty()) continue;
+        // std::cout << "creature " << crePtrArr[i]->getId() << " instructionArr[0]: ";
+        // for(int x : *crePtrArr[i]->instructionArr[step])
+        //     std::cout << x << " ";
+        // std::cout << std::endl;
         auto tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
-        if(tempRune.empty()) continue;
+
+        // std::cout << "activating: " << tempRune[0]->getType() << std::endl;
         std::vector<Rune*> pass;
         for(size_t j = 1; j < tempRune.size(); j++)
             pass.push_back(tempRune[j].get());
         tempRune[0]->activate(pass);
     }
+}
+
+void Compiler::removeDeadCreatures(){
+    crePtrArr.erase(
+        std::remove_if(crePtrArr.begin(), crePtrArr.end(),
+            [](Creature* c){ return c->isDead(); }),
+        crePtrArr.end()
+    );
 }

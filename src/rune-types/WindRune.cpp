@@ -16,7 +16,7 @@ int Wind::activate(std::vector<Rune*> r){
         case -2: holder->moveBy( 0,  1); break;
     }
 
-    // if position didn't change, we hit a wall — reverse direction
+    // hit a wall — reverse direction
     if(holder->getXpos() == oldX && holder->getYpos() == oldY){
         holder->setFacing(-facing);
     }

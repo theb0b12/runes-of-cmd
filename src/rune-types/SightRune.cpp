@@ -8,12 +8,10 @@ int Sight::activate(std::vector<Rune*> r){
     int targetId = getHolder()->inFront(map);
     if(targetId == 0) return 0; // nothing in front
     if(modifier == "Discord"){
-        // true if enemy in front (odd id)
-        return targetId % 2 == 1 ? 1 : 0;
+        return targetId % 2 == 1 ? 1 : 0; // enemy = odd id
     }
     if(modifier == "Harmony"){
-        // true if ally in front (even id)
-        return targetId % 2 == 0 ? 1 : 0;
+        return targetId % 2 == 0 ? 1 : 0; // ally = even id
     }
     return -1;
 }

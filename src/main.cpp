@@ -63,14 +63,14 @@ bool createCreature(bool enemy, Map& map){
 }
 
 int wave = 1;
-int enemiesPerWave = 3;
+int enemiesPerWave = 2;
 int goodPerWave = 3;
 int enemiesSpawned = 0;
 int goodSpawned = 0;
 float waveTimer = 0.f;
-float spawnInterval = 2.f;   // seconds between spawns
+float spawnInterval = 5.f;   // seconds between spawns
 float resolveTimer = 0.f;
-const float RESOLVE_INTERVAL = 0.5f;
+const float RESOLVE_INTERVAL = 0.1f;
 bool waveActive = false;
 
 int main(){
@@ -128,14 +128,18 @@ int main(){
     bgMusic.play();
 
     creVec.reserve(100);
-    Compiler::initiallize(map);
+    Compiler::initialize(map);
 
     while(window.isOpen()){
         while(const std::optional event = window.pollEvent()){
             if(event->is<sf::Event::Closed>())
                 window.close();
         }
+
+
         float dt = clock.restart().asSeconds();
+
+
 
         // player controls
         std::string dir = playerWalk.getCurrentDirection();
@@ -197,11 +201,9 @@ int main(){
                 auto queue = terminal.getQueue();
                 std::vector<Rune> runeVec;
                 for(auto* r : queue) runeVec.push_back(*r);
-                auto result = Compiler::createInstructions(runeVec);
-                for(int i = 0; i < 12; i++)
-                    *selectedCreature->instructionArr[i] = *result[i];
-                selectedCreature->setProgram(Compiler::invTransform(runeVec));
-                Compiler::newCreature(selectedCreature);
+                std::vector<int> program = Compiler::invTransform(runeVec);
+                selectedCreature->setProgram(program);
+                Compiler::setProgram(selectedCreature, program);
                 terminal.resetCompile();
                 selectedCreature = nullptr;
             }
@@ -226,34 +228,45 @@ int main(){
 
         if(waveActive && waveTimer >= spawnInterval){
             waveTimer = 0.f;
+
             // fill occupied before spawning so we don't overlap
             map.clearOccupied();
             for(size_t i = 0; i < creVec.size(); i++)
                 map.occupied[creVec[i].getXpos()][creVec[i].getYpos()] = creVec[i].getId();
 
-            if(enemiesSpawned < enemiesPerWave + (wave - 1)){
+            int targetEnemies = enemiesPerWave + (wave - 1);
+            int targetGood    = goodPerWave    + (wave - 1);
+
+            if(enemiesSpawned < targetEnemies){
                 if(createCreature(true, map)){
-                    Compiler::newCreature(&creVec[creVec.size()-1]);
-                    Creature::registerCreature(&creVec[creVec.size()-1]);
-                    enemiesSpawned++;
+                    Creature* enemy = &creVec[creVec.size()-1];
+                    Compiler::registerCreature(enemy);
+                    Creature::registerCreature(enemy);
+                    // fixed enemy program: if ally in front attack, else move
+                    // {2,1,3,7,8,5} = Choice Sight Harmony Violence \n Wind
+                    Compiler::setProgram(enemy, {2,1,3,7,8,5});
+                    enemy->setProgram({2,1,3,7,8,5});
                 }
             }
-            if(goodSpawned < goodPerWave + (wave - 1)){
+
+            if(goodSpawned < targetGood){
                 if(createCreature(false, map)){
-                    Compiler::newCreature(&creVec[creVec.size()-1]);
+                    Compiler::registerCreature(&creVec[creVec.size()-1]);
                     Creature::registerCreature(&creVec[creVec.size()-1]);
                     goodSpawned++;
                 }
             }
 
             // wave complete when all spawned and all enemies dead
-            int enemiesAlive = 0;
-            for(auto& c : creVec) if(c.getEnemy()) enemiesAlive++;
-            if(enemiesSpawned >= enemiesPerWave + (wave-1) && enemiesAlive == 0){
-                waveActive = false;
-                wave++;
-                waveTimer = 0.f;
-                std::cout << "Wave " << wave-1 << " complete! Next wave in 3s\n";
+            if(enemiesSpawned >= targetEnemies && goodSpawned >= targetGood){
+                int enemiesAlive = 0;
+                for(auto& c : creVec) if(c.getEnemy()) enemiesAlive++;
+                if(enemiesAlive == 0){
+                    waveActive = false;
+                    wave++;
+                    waveTimer = 0.f;
+                    std::cout << "Wave " << wave-1 << " complete! Next wave in 3s\n";
+                }
             }
         }
 
@@ -287,6 +300,14 @@ int main(){
             );
         }
 
+        // check castle damage
+        for(auto& c : creVec){
+            if(c.getEnemy() && c.getXpos() ==0 ){
+                map.damageCastle();
+                c.takeDamage(99); // remove them
+            }
+        }
+
         // draw
         map.clearOccupied();
         window.clear();
@@ -302,6 +323,15 @@ int main(){
         } else {
             window.draw(muteButtonShape);
             window.draw(muteLabel);
+        }
+        if(map.castleDestroyed()){
+            // simple game over text for now
+            sf::Text gameOver(uiFont);
+            gameOver.setString("CASTLE DESTROYED - GAME OVER");
+            gameOver.setCharacterSize(48);
+            gameOver.setFillColor(sf::Color::Red);
+            gameOver.setPosition({400.f, 500.f});
+            window.draw(gameOver);
         }
 
         window.display();

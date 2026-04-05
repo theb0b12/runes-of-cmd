@@ -7,10 +7,10 @@ int Violence::activate(std::vector<Rune*> r){
     Creature* holder = getHolder();
     int targetId = holder->inFront(map);
     if(targetId == 0) return 0;
-    // find target in registry
     for(Creature* c : Creature::getRegistry()){
         if(c->getId() == targetId){
             holder->attack(c);
+            std::cout << "Violence: hit id " << targetId << " health now: " << c->getHealth() << "\n";
             if(c->isDead()){
                 Creature::unregisterCreature(c);
             }

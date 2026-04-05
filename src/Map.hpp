@@ -21,6 +21,11 @@ public:
 
     void clearOccupied();
 
+    int getCastleHealth() const { return _castleHealth; }
+    void damageCastle() { _castleHealth--; }
+    bool castleDestroyed() const { return _castleHealth <= 0; }
+    
+
     
     private:
 
@@ -37,6 +42,8 @@ public:
 
     sf::Texture              _castleTexture;
     std::optional<sf::Sprite> _castleSprite;
+
+    int _castleHealth = 10;
 };
 
 #endif

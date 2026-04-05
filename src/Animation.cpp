@@ -71,7 +71,6 @@ void Animation::setDirection(const std::string& newDirection, const std::string&
 
 // Sets frames per second, clamps to minimum 1.0 fps
 void Animation::setSpeed(float speed){
-    if (speed <= 0.f) speed = 1.f;
     _frameTime = 1.f / speed;
 }
 

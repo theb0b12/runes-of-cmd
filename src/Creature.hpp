@@ -28,6 +28,7 @@ private:
     int yPos;
     int health;
     int id;
+    std::vector <std::vector <int>*> arr;
 };
 
 #endif

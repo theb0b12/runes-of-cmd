@@ -164,21 +164,18 @@ void Compiler::resolve(){
     // std::cout << "instructionArr[step] ptr: " << crePtrArr[0]->instructionArr[step] << std::endl;
     // std::cout << "instructionArr[step] size: " << crePtrArr[0]->instructionArr[step]->size() << std::endl;
     for(size_t i = 0; i < crePtrArr.size(); i++){
-        std::cout << "inside" << std::endl;
+        // std::cout << "inside" << std::endl;
         
         std::vector<Rune> tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
-        std::cout << 2 << std::endl;
+        // std::cout << 2 << std::endl;
         std::vector <Rune> subVec = std::vector <Rune>(tempRune.begin() + 1, tempRune.end());
-        std::cout << 3 << std::endl;
+        // std::cout << 3 << std::endl;
         std::vector <Rune*> ptrVec;
-        std::cout << 4 << std::endl;
+        // std::cout << 4 << std::endl;
         for(size_t i = 0; i < subVec.size(); i++){
             ptrVec.push_back(&subVec[i]);
         }
-        std::cout << 5 << std::endl;
+        // std::cout << 5 << std::endl;
         tempRune[0].activate(ptrVec);
-        
     }
-        
 }
-

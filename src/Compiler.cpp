@@ -1,5 +1,11 @@
 #include "Compiler.hpp"
 
+// static member definitions
+std::vector<std::vector<int>*> Compiler::tempArr;
+std::vector<Creature*>         Compiler::crePtrArr;
+int                            Compiler::step = 0;
+
+
 void Compiler::initiallize(){
     step = 0;
     crePtrArr.clear();
@@ -13,7 +19,7 @@ void Compiler::newCreature(Creature* NC){
     crePtrArr.push_back(NC);
 }
 
-std::vector <int> invTransform(std::vector <Rune> vec){
+std::vector <int> Compiler::invTransform(std::vector <Rune> vec){
     std::vector <int> output;
     for(size_t i = 0; i < vec.size(); i++ ){
         std::string SC = vec[i].getType();

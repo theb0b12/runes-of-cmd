@@ -31,7 +31,7 @@ std::vector<Rune> transform(std::vector<int> vec, Creature* holder, Map& map){
             case 5: output.push_back(Wind(holder, map));             break;
             case 6: output.push_back(Twist(holder, map));            break;
             case 7: output.push_back(Violence(holder, map));         break;
-            case 8: output.push_back(Rune("\n", holder, map));       break;
+            case 8: output.push_back(Rune("Escape", holder, map));       break;
         }
     }
     return output;
@@ -196,7 +196,7 @@ int main(){
         sf::Vector2f mouse_position = window.mapPixelToCoords(pixelPos);
 
         if(selectedCreature){
-            terminal.update(mouse_position);
+            terminal.update(mouse_position, dt);
             if(terminal.isCompiled()){
                 auto queue = terminal.getQueue();
                 std::vector<Rune> runeVec;

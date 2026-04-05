@@ -32,6 +32,8 @@ public:
     static std::vector<Creature*>& getRegistry();
     static void registerCreature(Creature* c);
     static void unregisterCreature(Creature* c);
+
+    void rotateAnim90();
     
 
 private:
@@ -49,6 +51,8 @@ private:
     Animation _anim;
 
     static std::vector<Creature*> _registry;
+    
+    float _rotation = 0.f;
 };
 
 #endif

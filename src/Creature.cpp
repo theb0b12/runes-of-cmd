@@ -77,15 +77,36 @@ void Creature::addRune(int r){
 }
 
 
-void Creature::drawCreature(sf::RenderWindow& window, Map& map){
-    // std::cout << "drawing creature " << id << " at " << xPos << "," << yPos << " (ptr: " << this << ")" << std::endl;
-    float px = xPos * map.getTileWidth() + (map.getWidth() * 0.3f)/0.7f;
-    float py = (yPos - 3) * map.getTileHeight() + map.getHeight()/2;
-    _anim.setPosition({ px, py });
-    _anim.update(0.016f); // fixed timestep ~60fps
-    window.draw(_anim.getSprite());
+void Creature::drawCreature(sf::RenderWindow& window, Map& map)
+{
+    float px = xPos * map.getTileWidth()
+         + (map.getWidth() * 0.3f) / 0.7f
+         + map.getTileWidth() / 2.f;
+
+    float py = (yPos - 3) * map.getTileHeight()
+            + map.getHeight() / 2.f
+            + map.getTileHeight() / 2.f;
+
+    _anim.update(0.016f);
+
+    sf::Sprite sprite = _anim.getSprite();
+
+    // IMPORTANT: compute center of sprite
+    sf::FloatRect bounds = sprite.getLocalBounds();
+    sf::Vector2f center(bounds.size.x / 2.f, bounds.size.y / 2.f);
+
+    // Move sprite so its origin = center of tile
+    sprite.setPosition({ px, py });
+
+    // apply rotation around its own center
+    sprite.setOrigin(center);
+    sprite.setRotation(sf::degrees(_rotation));
+
+    window.draw(sprite);
+
     map.occupied[xPos][yPos] = id;
 }
+
 
 //Check if there is an enemy in front of the creature, returns id of creature if found and 0 if empty
 int Creature::inFront(Map& map){
@@ -142,4 +163,11 @@ void Creature::unregisterCreature(Creature* c) {
         std::remove(_registry.begin(), _registry.end(), c),
         _registry.end()
     );
+}
+
+
+void Creature::rotateAnim90()
+{
+    _rotation += 90.f;
+
 }

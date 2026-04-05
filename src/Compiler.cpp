@@ -111,7 +111,7 @@ std::vector<int> Compiler::invTransform(std::vector<Rune> vec){
         else if (t == "Wind") output.push_back(5);
         else if (t == "Twist") output.push_back(6);
         else if (t == "Violence") output.push_back(7);
-        else if (t == "\n") output.push_back(8);
+        else if (t == "Escape") output.push_back(8);
     }
     return output;
 }

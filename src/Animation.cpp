@@ -55,6 +55,8 @@ void Animation::loadFromFolder(const std::string& folderPath) {
 
     if (!_frames.empty()) {
         _sprite = std::make_unique<sf::Sprite>(_frames[0]);
+
+        sf::Vector2u texSize = _frames[0].getSize();
         // reapply saved transform
         _sprite->setScale(prevScale);
         _sprite->setPosition(prevPos);

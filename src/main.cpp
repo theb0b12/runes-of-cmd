@@ -222,7 +222,7 @@ int main(){
                 auto queue = terminal.getQueue();
                 std::vector<Rune> runeVec;
                 for (auto* r : queue) runeVec.push_back(*r);
-                Compiler::initiallize();
+                Compiler::initiallize(map);
                 Compiler::createInstructions(runeVec);
                 selectedCreature->setProgram(Compiler::invTransform(runeVec));
                 terminal.resetCompile();

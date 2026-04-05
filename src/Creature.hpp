@@ -33,7 +33,6 @@ private:
     int yPos;
     int health;
     int id;
-    std::vector <std::vector <int>*> instructionArr;
 
     std::vector<int> program;
 };

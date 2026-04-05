@@ -76,6 +76,22 @@ std::vector <Rune> transform(std::vector <int> vec, Creature* holder, Map& map){
     return output;
 }
 
+std::vector <Rune> transform(std::vector <std::vector<int>*> vec, Creature* holder, Map& map){
+    int lineNum = 1;
+    std::vector <int> newVec;
+    while(vec[0] != vec[lineNum]){
+        lineNum++;
+    }
+    for(int i = 0; i < lineNum; i++){
+        for(size_t j = 0; j < vec[i]->size(); j++){
+            newVec.push_back(vec[i]->at(j));
+        }
+        newVec.push_back(8);
+    }
+
+    return transform(newVec, holder, map);
+}
+
 int spawnTimer = 800;
 
 

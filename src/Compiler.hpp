@@ -14,6 +14,7 @@ class Compiler{
     static void newCreature(Creature*);
     static std::vector <int> invTransform(std::vector <Rune>);
     static std::vector <std::vector <int>*> createInstructions(std::vector <Rune>);
+    
     private:
     static std::vector <std::vector <int>*> tempArr;
     static std::vector <Creature*> crePtrArr;

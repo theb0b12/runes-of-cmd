@@ -295,6 +295,7 @@ int main(){
             window.draw(myButton);
             window.draw(muteButtonShape);
         }
+        window.draw(muteLabel);
 
         window.display();
 

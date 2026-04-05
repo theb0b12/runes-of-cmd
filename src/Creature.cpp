@@ -24,6 +24,11 @@ Creature::Creature(int x, int y, int hp, bool enemy, int count){
     } else {
         body.setFillColor(sf::Color::Red);
     }
+    for(int i = 0; i < 12; i++){
+        std::vector <int> tempvec;
+        tempvec.push_back(1);
+        instructionArr.push_back(&tempvec);
+    }
 }
 
 //getters

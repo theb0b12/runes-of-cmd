@@ -1,5 +1,5 @@
 #include "Compiler.hpp"
-
+#include <iostream>
 // static member definitions
 std::vector<std::vector<int>*> Compiler::tempArr;
 std::vector<Creature*>         Compiler::crePtrArr;
@@ -23,7 +23,7 @@ void Compiler::newCreature(Creature* NC){
 
 std::vector <Rune> Compiler::transform(std::vector <int> vec, Creature* holder, Map& map){
     std::vector <Rune> output;
-    for(int i = 0; i < vec.size(); i++ ){
+    for(size_t i = 0; i < vec.size(); i++ ){
         switch(vec[i]){
             case 1:
             output.push_back(Sight(holder,map));
@@ -131,12 +131,14 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
             tempArr[i] = tempArr[0];
             tempArr[i + 1] = tempArr[1];
         }
+        break;
     case 3:
         for(int i = 3; i < 12; i += 3){
             tempArr[i] = tempArr[0];
             tempArr[i + 1] = tempArr[1];
             tempArr[i + 2] = tempArr[2];
         }
+        break;
     case 4:
         for(int i = 4; i < 12; i += 4){
             tempArr[i] = tempArr[0];
@@ -144,6 +146,7 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
             tempArr[i + 2] = tempArr[2];
             tempArr[i + 3] = tempArr[3];
         }
+        break;
     default:
         break;
     }
@@ -154,15 +157,24 @@ std::vector <std::vector <int>*> Compiler::createInstructions(std::vector <Rune>
 
 
 void Compiler::resolve(){
+    std::cout << 1 << std::endl;
+    std::cout << (crePtrArr[0]->instructionArr[step])->size() << std::endl;
+    std::cout << 1 << std::endl;
     for(size_t i = 0; i < crePtrArr.size(); i++){
+        std::cout << "inside" << std::endl;
+        
         std::vector<Rune> tempRune = transform(*(crePtrArr[i]->instructionArr[step]), crePtrArr[i], *areamap);
+        std::cout << 2 << std::endl;
         std::vector <Rune> subVec = std::vector <Rune>(tempRune.begin() + 1, tempRune.end());
+        std::cout << 3 << std::endl;
         std::vector <Rune*> ptrVec;
+        std::cout << 4 << std::endl;
         for(size_t i = 0; i < subVec.size(); i++){
             ptrVec.push_back(&subVec[i]);
         }
-        
+        std::cout << 5 << std::endl;
         tempRune[0].activate(ptrVec);
+        
     }
         
 }

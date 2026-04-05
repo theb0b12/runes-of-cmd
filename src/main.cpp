@@ -33,20 +33,23 @@ std::random_device rd;
 std::mt19937 mt(rd());
 std::uniform_int_distribution<int> intDist(0,5);
 
-void createCreature(bool enemy, Map& map){
+bool createCreature(bool enemy, Map& map){
     int yheight = intDist(mt);
     if(enemy && map.occupied[11][yheight] == 0){
         creVec.push_back(Creature(11,yheight, 3,  true, numBad * 2 + 1));
         numBad++;
+        return true;
     } else if (map.occupied[0][yheight] == 0) {
         creVec.push_back(Creature(0,yheight, 3, false, numGood * 2 + 2));
         numGood++;
+        return true;
     }
+    return false;
 }
 
 
 
-int spawnTimer = 800;
+int spawnTimer = 0;
 
 
 int main(){
@@ -239,8 +242,12 @@ int main(){
         //spawn tests
         spawnTimer--;
         if(spawnTimer < 0){
-            createCreature(true, map);
-            createCreature(false, map);
+            if(createCreature(true, map)){
+                Compiler::newCreature(&creVec[creVec.size() - 1]);
+            }
+            if(createCreature(false, map)){
+                Compiler::newCreature(&creVec[creVec.size() - 1]);
+            }
             spawnTimer = 100;
         }
         
@@ -263,7 +270,7 @@ int main(){
 
         map.draw(window);
 
-
+        Compiler::resolve();
         for(int i = 0; i < creVec.size(); i++){
             creVec[i].drawCreature(window,map);
         }

@@ -27,11 +27,11 @@ Creature::Creature(int x, int y, int hp, bool enemy, int count){
     }
 
     if(isEnemy) {
-        _anim = Animation("assets/badGuy", 0.5f);
+        _anim = Animation("assets/badGuy", 4.f);
     } else {
         _anim = Animation("assets/goodGuy", 4.f);
     }
-    _anim.setScale({ 9.f, 9.f });
+    _anim.setScale({ 13.f, 13.f });
 
     
 }

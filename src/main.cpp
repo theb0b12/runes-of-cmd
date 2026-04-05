@@ -55,7 +55,7 @@ bool createCreature(bool enemy, Map& map){
         numBad++;
         return true;
     } else if(!enemy && map.occupied[0][yheight] == 0){
-        creVec.push_back(Creature(0, yheight, 3, false, numGood * 2 + 2)); // health=3
+        creVec.push_back(Creature(0, yheight, 4, false, numGood * 2 + 2)); // health=3
         numGood++;
         return true;
     }
